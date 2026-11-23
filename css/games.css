@@ -1,0 +1,65 @@
+/* Games tab. Same look as the Discord tab; the page's inline CSS forces red text, hence the !important colours. */
+html body #gamesView .gm-shell{background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+html body #gamesView .gm-tabs{display:flex;gap:4px;padding:8px 10px 0;background:#140a0b;border-bottom:1px solid var(--border);overflow-x:auto}
+html body #gamesView .gm-tab{background:transparent;border:1px solid transparent;border-bottom:0;border-radius:8px 8px 0 0;padding:7px 16px;
+  color:var(--muted)!important;font:12px 'Cascadia Code',Consolas,monospace;letter-spacing:1.5px;cursor:pointer;white-space:nowrap}
+html body #gamesView .gm-tab:hover{color:var(--text)!important}
+html body #gamesView .gm-tab.on{background:var(--panel);border-color:var(--border);color:var(--red-hot)!important}
+
+html body #gamesView .mc-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid var(--border-soft);font:12px 'Cascadia Code',Consolas,monospace}
+html body #gamesView .mc-bar b{color:var(--red-hot)!important;letter-spacing:1.5px}
+html body #gamesView .mc-info{color:var(--muted)!important}
+html body #gamesView .mc-sp{flex:1}
+html body #gamesView .mc-tag{font-size:10px;letter-spacing:1px;padding:1px 8px;border:1px solid var(--border);border-radius:999px;color:var(--muted)!important}
+html body #gamesView .mc-tag.good{color:#7dffa0!important;border-color:rgba(125,255,160,.35)}
+html body #gamesView .mc-tag.bad{color:var(--red-hot)!important;border-color:var(--red)}
+html body #gamesView .mc-tag.busy{color:#ffd37d!important;border-color:rgba(255,211,125,.4)}
+html body #gamesView .mc-msg{padding:8px 16px;font-size:13px;color:#7dffa0!important;background:#0c1410;border-bottom:1px solid var(--border-soft)}
+html body #gamesView .mc-msg.bad{color:var(--red-hot)!important;background:#160a0b}
+
+/* Discord-style switch */
+html body #gamesView .mc-switch{display:inline-flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+html body #gamesView .mc-switch input{position:absolute;opacity:0;width:0;height:0}
+html body #gamesView .mc-track{position:relative;width:40px;height:24px;border-radius:999px;background:#4e5058;transition:background .2s}
+html body #gamesView .mc-knob{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s}
+html body #gamesView .mc-switch input:checked+.mc-track{background:#23a55a}
+html body #gamesView .mc-switch input:checked+.mc-track .mc-knob{transform:translateX(16px)}
+html body #gamesView .mc-switch input:disabled+.mc-track{opacity:.55}
+html body #gamesView .mc-switch input:focus-visible+.mc-track{box-shadow:var(--ring)}
+html body #gamesView .mc-sw-t{color:var(--text)!important;letter-spacing:1.5px;min-width:24px}
+
+html body #gamesView .mc-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:0}
+html body #gamesView .mc-view{padding:14px;background:#0e0a0b;min-width:0}
+html body #gamesView .mc-screen{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+html body #gamesView .mc-screen iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
+html body #gamesView .mc-idle{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:12px;
+  background:repeating-linear-gradient(0deg,#0a0a0a 0 3px,#101010 3px 6px);color:var(--muted)!important;font:13px 'Cascadia Code',Consolas,monospace;letter-spacing:3px}
+html body #gamesView .mc-cap{margin-top:8px;color:var(--muted)!important;font:11px 'Cascadia Code',Consolas,monospace;letter-spacing:1.5px}
+
+html body #gamesView .mc-term{display:flex;flex-direction:column;min-width:0;min-height:0;height:clamp(380px,68vh,760px);overflow:hidden;border-left:1px solid var(--border);background:#0a0708}
+html body #gamesView .mc-tt{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:8px 10px;background:#140a0b;border-bottom:1px solid var(--border-soft);font:12px 'Cascadia Code',Consolas,monospace}
+html body #gamesView .mc-tt label{color:var(--muted)!important}
+html body #gamesView .mc-tt input{accent-color:var(--red)}
+html body #gamesView .mc-tb,html body #gamesView .mc-btn{background:var(--raised);border:1px solid var(--border);color:var(--muted)!important;border-radius:6px;
+  padding:5px 12px;cursor:pointer;font:inherit;font-size:12px;letter-spacing:1px;transition:.15s}
+html body #gamesView .mc-tb:hover,html body #gamesView .mc-btn:hover{border-color:var(--red)}
+html body #gamesView .mc-tb.on{background:rgba(217,34,40,.22);border-color:var(--red);color:#fff!important}
+html body #gamesView .mc-out{flex:1 1 0;min-height:0;margin:0;overflow-y:scroll;overflow-x:hidden;padding:8px 12px;white-space:pre-wrap;word-break:break-word;
+  font:12.5px/1.5 'Cascadia Code',Consolas,monospace;color:var(--text)!important;background:transparent;border:0;overscroll-behavior:contain;
+  scrollbar-width:thin;scrollbar-color:var(--red-deep) transparent}
+html body #gamesView .mc-out .tl{color:#d6d6d6!important}
+html body #gamesView .mc-out .tl-warn{color:#ffb86b!important}
+html body #gamesView .mc-out .tl-err{color:#ff6b6b!important}
+html body #gamesView .mc-cmd{display:flex;gap:6px;padding:8px 10px;border-top:1px solid var(--border-soft)}
+html body #gamesView .mc-cmd input{flex:1;min-width:0;background:#1a0505!important;color:var(--text)!important;border:1px solid var(--border);border-radius:6px;padding:6px 10px;font:12.5px 'Cascadia Code',Consolas,monospace}
+html body #gamesView .mc-cmd input:focus{outline:0;border-color:var(--red);box-shadow:var(--ring)}
+
+@media (max-width:900px){
+  html body #gamesView .mc-grid{grid-template-columns:1fr}
+  html body #gamesView .mc-term{border-left:0;border-top:1px solid var(--border)}
+  html body #gamesView .mc-term{height:clamp(300px,55vh,520px)}
+}
+@media (pointer:coarse) and (max-width:820px){
+  html body #gamesView{height:100%!important;box-sizing:border-box;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:8px 8px calc(24px + env(safe-area-inset-bottom,0px))}
+  html body #gamesView .mc-cmd input{font-size:16px}
+}

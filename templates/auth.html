@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rasputin</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#09090a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Rasputin">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="/pwa/apple-touch-icon.png">
+<style>
+  :root { --bg:#09090a; --panel:#111113; --raised:#17171a; --border:#3a0f12; --red:#d92228; --red-hot:#ff4d4d; --text:#ececec; --muted:#9a9a9f; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; }
+  body { min-height: 100vh; min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: 24px; padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
+  form { width: min(380px, 100%); background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 28px 24px 24px; }
+  h1 { margin: 0 0 4px; text-align: center; letter-spacing: 6px; font-size: 22px; color: var(--red-hot); font-weight: 600; }
+  .sub { margin: 0 0 22px; text-align: center; color: var(--muted); letter-spacing: 2px; font-size: 12px; }
+  label { display: block; margin: 0 0 14px; color: var(--muted); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; }
+  input { display: block; width: 100%; margin-top: 6px; padding: 12px 14px; font: inherit; font-size: 16px; letter-spacing: 0; text-transform: none;
+          color: var(--text); background: var(--raised); border: 1px solid var(--border); border-radius: 10px; outline: 0; }
+  input:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(217,34,40,.35); }
+  button { width: 100%; margin-top: 6px; padding: 13px; font: inherit; font-size: 15px; font-weight: 600; letter-spacing: 2px; color: #fff; cursor: pointer;
+           background: rgba(217,34,40,.25); border: 1px solid var(--red); border-radius: 10px; }
+  button:hover { background: var(--red); }
+  .msg { min-height: 20px; margin: 14px 0 0; text-align: center; color: var(--red-hot); font-size: 14px; line-height: 1.4; }
+  .note { margin: 0 0 18px; color: var(--muted); font-size: 13px; line-height: 1.5; text-align: center; }
+</style>
+</head>
+<body>
+{% if mode == 'blocked' %}
+<form onsubmit="return false">
+  <h1>RASPUTIN</h1>
+  <p class="sub">{{ subtitle }}</p>
+  <p class="msg">{{ message }}</p>
+</form>
+{% else %}
+<form method="post" action="/{{ 'setup' if mode == 'setup' else 'login' }}">
+  <h1>RASPUTIN</h1>
+  <p class="sub">{{ subtitle }}</p>
+  {% if mode == 'setup' %}<p class="note">This account becomes the Owner. You can add everyone else later from the Admin tab on this PC.</p>{% endif %}
+  <label>Username
+    <input name="username" value="{{ username }}" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="32" required autofocus>
+  </label>
+  <label>Password
+    <input name="password" type="password" autocomplete="{{ 'new-password' if mode == 'setup' else 'current-password' }}" minlength="{{ pw_min if mode == 'setup' else 1 }}" maxlength="128" required>
+  </label>
+  {% if mode == 'setup' %}
+  <label>Confirm password
+    <input name="confirm" type="password" autocomplete="new-password" minlength="{{ pw_min }}" maxlength="128" required>
+  </label>
+  {% endif %}
+  <button type="submit">{{ button }}</button>
+  <p class="msg">{{ message }}</p>
+</form>
+{% endif %}
+<script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(function () {});</script>
+</body>
+</html>

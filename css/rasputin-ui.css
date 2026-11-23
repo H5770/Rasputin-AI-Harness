@@ -1,0 +1,242 @@
+/* Rasputin red & black UI. Loaded AFTER the template CSS and the inline <style>. */
+:root{
+  --bg:#09090a; --panel:#111113; --raised:#17171a; --border:#3a0f12; --border-soft:#241214;
+  --red:#d92228; --red-hot:#ff4d4d; --red-deep:#7a0000; --text:#ececec; --muted:#9a9a9f;
+  --ring:0 0 0 3px rgba(217,34,40,.35);
+}
+html,body{background:var(--bg)!important}
+html body, html body #zoomRoot{color:var(--text)!important;font-family:'Inter',system-ui,sans-serif}
+html body .pc-footer{background:var(--panel)!important;border-top:1px solid var(--border-soft);color:var(--muted)!important}
+html body .pc-footer *{color:var(--muted)!important}
+html body #navBar{background:var(--bg)}
+html body #navBar button{background:var(--raised);border:1px solid var(--border);color:var(--red-hot)!important;transition:.15s}
+html body #navBar button:hover:not(:disabled){border-color:var(--red);box-shadow:var(--ring)}
+html body #navBar span{color:var(--muted)!important}
+
+/* usage cards: compact */
+html body #zoomRoot > .d-flex{gap:10px!important;margin-bottom:12px!important}
+html body #zoomRoot > .d-flex .card{background:var(--panel)!important;border:1px solid var(--border-soft)!important;border-radius:10px;transition:.15s}
+html body #zoomRoot > .d-flex .card:hover{border-color:var(--red-deep)!important}
+html body #zoomRoot > .d-flex .card-body{padding:8px 12px}
+html body #zoomRoot > .d-flex .card *{color:var(--text)!important;font-size:13px}
+html body #zoomRoot > .d-flex .card [id$=Percent]{color:var(--red-hot)!important;font-size:18px!important;font-weight:600}
+
+/* sidebar */
+html body .pc-sidebar{background:var(--panel)!important;border-right:1px solid var(--border)!important}
+html body .pc-sidebar .pc-item>a,html body .pc-sidebar .pc-item a .pc-mtext,html body .pc-sidebar .pc-item a .pc-micon{color:var(--text)!important}
+html body .pc-sidebar .pc-item>a,html body .pc-sidebar .chat-entry>a{border-radius:8px;margin:2px 10px;transition:background .15s}
+html body .pc-sidebar .pc-item>a:hover,html body .pc-sidebar .chat-entry:hover{background:rgba(217,34,40,.12)!important}
+html body .pc-sidebar .pc-caption label{color:var(--muted)!important;font-size:11px;letter-spacing:1.5px;text-transform:uppercase}
+html body .pc-sidebar .chat-entry{border-radius:8px;margin:2px 10px;padding-right:4px;position:relative;border:1px solid transparent}
+html body .pc-sidebar .chat-entry.active{background:rgba(217,34,40,.18)!important;border-color:var(--red-deep)}
+html body .pc-sidebar .chat-entry>a{margin:0;min-width:0}
+html body .pc-sidebar .chat-entry .pc-mtext{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+.chat-actions{display:none;gap:2px}
+.chat-entry:hover .chat-actions,.chat-entry.active .chat-actions{display:inline-flex}
+.chat-actions button{background:none;border:0;border-radius:6px;padding:3px 6px;color:var(--muted)!important;opacity:.8;transition:.15s}
+.chat-actions button:hover{background:rgba(217,34,40,.25);color:#fff!important;opacity:1}
+
+/* chat view */
+#chatInterfaceView .chat-shell{display:flex;flex-direction:column;height:calc(100vh - 250px);min-height:300px;
+  background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+html body #chatbox{flex:1;height:auto!important;border:0!important;border-radius:0!important;background:transparent!important;
+  padding:24px 0!important;scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--red-deep) transparent}
+#chatbox:empty::before{content:"Ask Rasputin anything.";display:flex;height:100%;align-items:center;justify-content:center;
+  color:var(--muted);font-size:20px;letter-spacing:.5px}
+.msg-row{display:flex;gap:14px;max-width:820px;margin:0 auto;padding:12px 24px;animation:msgIn .25s ease}
+.msg-row.user{justify-content:flex-end}
+@keyframes msgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.avatar{flex:0 0 32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--red),#5a0000);
+  display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff!important;box-shadow:0 0 12px rgba(217,34,40,.45)}
+.msg-body{min-width:0;line-height:1.65;font-size:15px;color:var(--text)!important;overflow-wrap:anywhere}
+.msg-row.user .msg-body{background:var(--raised);border:1px solid var(--border);padding:10px 16px;border-radius:18px 18px 4px 18px;
+  max-width:80%;white-space:pre-wrap}
+.msg-row.bot .msg-body{flex:1}
+.msg-body p{margin:0 0 12px;color:var(--text)!important}.msg-body p:last-child{margin:0}
+.msg-body strong{color:#fff!important}
+.msg-body code.inline{background:#1d1012;border:1px solid var(--border);color:#ff8a8a!important;padding:1px 6px;border-radius:5px;font-size:.9em;font-family:'Cascadia Code',Consolas,monospace}
+
+/* typing indicator */
+.typing{display:inline-flex;gap:5px;padding:10px 0}
+.typing i{width:8px;height:8px;border-radius:50%;background:var(--red);animation:pulse 1.2s infinite ease-in-out}
+.typing i:nth-child(2){animation-delay:.18s}.typing i:nth-child(3){animation-delay:.36s}
+@keyframes pulse{0%,80%,100%{opacity:.25;transform:scale(.7)}40%{opacity:1;transform:scale(1);box-shadow:0 0 10px var(--red)}}
+
+/* composer */
+.composer{padding:12px 24px 18px;border-top:1px solid var(--border-soft);background:var(--panel)}
+.composer-box{max-width:820px;margin:0 auto;display:flex;align-items:flex-end;gap:10px;background:var(--raised);
+  border:1px solid var(--border);border-radius:16px;padding:8px 8px 8px 16px;transition:.15s}
+.composer-box:focus-within{border-color:var(--red);box-shadow:var(--ring)}
+html body #userInput{flex:1;resize:none;background:transparent!important;border:0!important;outline:0!important;box-shadow:none!important;
+  color:var(--text)!important;font:inherit;font-size:15px;line-height:1.5;max-height:200px;padding:6px 0}
+html body #userInput::placeholder{color:var(--muted)!important;opacity:1}
+#sendBtn{width:38px;height:38px;border-radius:50%;border:0;background:var(--red);color:#fff!important;font-size:18px;cursor:pointer;transition:.15s;flex:none}
+#sendBtn:hover:not(:disabled){background:var(--red-hot);transform:scale(1.06)}
+#sendBtn:disabled{opacity:.35;cursor:default}
+.composer-hint{max-width:820px;margin:6px auto 0;font-size:11px;color:var(--muted)!important;text-align:center}
+
+/* code windows */
+.code-win{margin:12px 0;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#0d0d0f}
+.code-head{display:flex;justify-content:space-between;align-items:center;padding:6px 8px 6px 14px;background:#1a0f10;
+  border-bottom:1px solid var(--border);font-size:12px}
+.code-lang{color:var(--red-hot)!important;text-transform:capitalize;letter-spacing:.5px;font-weight:600}
+.copy-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid transparent;color:var(--muted)!important;
+  padding:3px 10px;border-radius:6px;font-size:12px;cursor:pointer;transition:.15s}
+.copy-btn:hover{background:rgba(217,34,40,.15);color:#fff!important}
+.copy-btn.done{color:#7dffa0!important;border-color:rgba(125,255,160,.35)}
+.code-win pre{margin:0;padding:14px 16px;overflow-x:auto;scrollbar-width:thin;scrollbar-color:var(--red-deep) transparent}
+.code-win code{font-family:'Cascadia Code',Consolas,'Courier New',monospace;font-size:13.5px;line-height:1.55;color:#e6e6e6!important;white-space:pre}
+.tk-c{color:#6f6a6a!important;font-style:italic}.tk-s{color:#f4a261!important}.tk-n{color:#ffb86b!important}
+.tk-k{color:#ff5c5c!important;font-weight:600}.tk-f{color:#ffd0a8!important}
+
+/* ---- sidebar divider: dark wine, visible but quiet ---- */
+:root{
+  --divider:#4a1c28;
+  --pc-sidebar-border:1px solid #4a1c28;
+  --bs-border-color:#4a1c28;
+}
+html body .pc-sidebar{
+  border:0!important;
+  border-right:1px solid var(--divider)!important;
+  box-shadow:none!important;
+}
+html body .pc-sidebar .navbar-wrapper,
+html body .pc-sidebar .navbar-content,
+html body .pc-sidebar .m-header{
+  border:0!important;
+  box-shadow:none!important;
+  background:transparent!important;
+}
+html body .pc-container{
+  background:var(--bg)!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+
+/* ---- terminal tab ---- */
+.term-shell{display:flex;flex-direction:column;height:calc(100vh - 250px);min-height:300px;background:#060607;
+  border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.term-bar{display:flex;align-items:center;gap:14px;padding:8px 14px;background:#140a0b;border-bottom:1px solid var(--border);
+  font:12px 'Cascadia Code',Consolas,monospace}
+.term-bar b{color:var(--red-hot)!important;letter-spacing:1.5px}
+.term-bar .sp{flex:1}
+.term-bar label,.term-bar span{color:var(--muted)!important}
+.term-bar input{accent-color:var(--red)}
+.term-bar button{background:var(--raised);border:1px solid var(--border);color:var(--red-hot)!important;border-radius:6px;padding:3px 12px;cursor:pointer;transition:.15s}
+.term-bar button:hover{border-color:var(--red);box-shadow:var(--ring)}
+html body .term-bar #termStatus.on{color:#7dffa0!important}
+html body .term-bar #termStatus.off{color:var(--red-hot)!important}
+#termOut{flex:1;overflow:auto;padding:12px 16px;font:13px/1.5 'Cascadia Code',Consolas,'Courier New',monospace;
+  white-space:pre-wrap;word-break:break-word;scrollbar-width:thin;scrollbar-color:var(--red-deep) transparent}
+html body #termOut .tl{color:#d6d6d6!important}
+html body #termOut .tl-dim{color:#7d7478!important}
+html body #termOut .tl-warn{color:#ffb86b!important}
+html body #termOut .tl-err{color:#ff6b6b!important}
+html body #navBar #exitBtn{background:rgba(217,34,40,.2);border-color:var(--red);color:#fff!important;font-weight:600}
+html body #navBar #exitBtn:hover{background:var(--red)}
+.exit-overlay{position:fixed;inset:0;z-index:99999;background:rgba(6,6,7,.94);display:flex;align-items:center;justify-content:center;
+  text-align:center;font-size:18px;line-height:1.9}
+.exit-overlay,.exit-overlay *{color:var(--text)!important}
+
+/* page height is decided by the content, so the footer always fits in the window */
+html body .pc-container{min-height:0!important}
+html body .pc-content{padding-bottom:12px!important}
+
+/* sidebar icons (inline SVG, so they don't depend on the icon font) */
+html body .pc-sidebar .pc-micon{display:inline-flex;align-items:center;justify-content:center}
+.pc-sidebar .nav-ico{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+html body .pc-sidebar .pc-item>a:hover .pc-micon{color:var(--red-hot)!important;transition:color .15s}
+
+/* LLM backend chip in the top bar */
+html body #navBar #llmChip{padding:3px 10px;border:1px solid var(--border);border-radius:999px;font-size:12px}
+html body #navBar #llmChip.gpu{color:#7dffa0!important;border-color:rgba(125,255,160,.35)}
+html body #navBar #llmChip.cpu{color:#ff6b6b!important;border-color:var(--red)}
+
+/* ---- generated images ---- */
+.img-card{position:relative;width:min(512px,100%);aspect-ratio:1/1;border-radius:12px;overflow:hidden;
+  border:1px solid var(--border);background:linear-gradient(120deg,#1a0a0c,#3a0f12,#1a0a0c);background-size:200% 200%;
+  animation:imgShimmer 2.2s ease infinite}
+.img-card.done{animation:none;background:#0d0d0f}
+@keyframes imgShimmer{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.img-el{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;filter:blur(0);
+  transition:filter .7s ease,opacity .4s ease,transform .7s ease}
+.img-card.has-preview .img-el{opacity:1}
+.img-card.pending .img-el{filter:blur(22px);transform:scale(1.12)}      /* scale hides the blurred edges */
+.img-card.done .img-el{opacity:1;filter:blur(0);transform:none}
+.img-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+  background:rgba(9,9,10,.25);transition:opacity .4s ease;pointer-events:none}
+.img-card.done .img-overlay{opacity:0}
+.img-spinner{width:42px;height:42px;border-radius:50%;border:3px solid rgba(255,255,255,.25);border-top-color:var(--red-hot);animation:imgSpin .9s linear infinite}
+@keyframes imgSpin{to{transform:rotate(360deg)}}
+html body .img-status{color:#fff!important;font-size:13px;letter-spacing:1px;text-shadow:0 1px 6px rgba(0,0,0,.8)}
+.img-dl{position:absolute;top:10px;right:10px;width:36px;height:36px;display:none;align-items:center;justify-content:center;
+  border:0;border-radius:8px;background:rgba(9,9,10,.72);color:#fff!important;cursor:pointer;opacity:0;transition:opacity .15s,background .15s;
+  backdrop-filter:blur(4px)}
+.img-card.done .img-dl{display:flex}
+.img-card.done:hover .img-dl,.img-dl:focus-visible{opacity:1}
+.img-dl:hover{background:var(--red)}
+.img-card.failed{animation:none;display:flex;align-items:center;justify-content:center;aspect-ratio:auto;min-height:90px;padding:16px;text-align:center}
+html body .img-error,html body .img-error small{color:var(--red-hot)!important}
+
+/* ---- home tab (smart lights). The page's inline CSS forces red text on most tags, hence the !important colours ---- */
+html body #homeView .hm-shell{background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+html body #homeView .hm-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px;background:#140a0b;
+  border-bottom:1px solid var(--border);font:12px 'Cascadia Code',Consolas,monospace}
+html body #homeView .hm-bar b{color:var(--red-hot)!important;letter-spacing:1.5px}
+html body #homeView .hm-bar span{color:var(--muted)!important}
+html body #homeView .hm-sp{flex:1}
+html body #homeView .hm-btn{background:var(--raised);border:1px solid var(--border);color:var(--red-hot)!important;border-radius:6px;
+  padding:4px 12px;cursor:pointer;font:inherit;font-size:12px;letter-spacing:1px;transition:.15s}
+html body #homeView .hm-btn:hover:not(:disabled){border-color:var(--red);box-shadow:var(--ring)}
+html body #homeView .hm-btn:disabled{opacity:.4;cursor:default}
+html body #homeView .hm-btn.hm-small{padding:2px 9px;font-size:11px}
+html body #homeView .hm-msg{padding:8px 16px;font-size:13px;color:#7dffa0!important;background:#0c1410;border-bottom:1px solid var(--border-soft)}
+html body #homeView .hm-msg.bad{color:var(--red-hot)!important;background:#160a0b}
+html body #homeView .hm-in{background:#1a0505!important;color:var(--text)!important;border:1px solid var(--border);border-radius:6px;
+  padding:5px 8px;font:inherit;font-size:13px;min-width:0}
+html body #homeView .hm-in:focus{outline:0;border-color:var(--red);box-shadow:var(--ring)}
+html body #homeView .hm-in option{background:#1a0505!important;color:var(--text)!important}
+
+/* setup panel */
+html body #homeView .hm-setup{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;padding:16px;
+  border-bottom:1px solid var(--border);background:#0e0a0b}
+html body #homeView .hm-h{color:var(--red-hot)!important;letter-spacing:2px;font-size:12px;margin-bottom:6px}
+html body #homeView .hm-note{color:var(--muted)!important;font-size:12px;line-height:1.6;margin:6px 0}
+html body #homeView .hm-note b{color:var(--text)!important}
+html body #homeView .hm-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+html body #homeView .hm-row .hm-in{flex:1 1 200px}
+html body #homeView .hm-foot{grid-column:1/-1;color:var(--muted)!important;font-size:11px;letter-spacing:1px;opacity:.8}
+
+/* rooms */
+html body #homeView .hm-room{border-bottom:1px solid var(--border)}
+html body #homeView .hm-room:last-child{border-bottom:0}
+html body #homeView .hm-room-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 16px;background:rgba(217,34,40,.06)}
+html body #homeView .hm-room-title{display:flex;flex-direction:column;min-width:110px}
+html body #homeView .hm-room-name{color:var(--text)!important;font-size:17px;font-weight:600;letter-spacing:.5px}
+html body #homeView .hm-room-count{color:var(--muted)!important;font-size:11px;letter-spacing:1px}
+html body #homeView .hm-empty{padding:14px 16px;color:var(--muted)!important;font-size:13px}
+html body #homeView .hm-empty.big{padding:48px 16px;text-align:center;font-size:16px}
+
+/* one light */
+html body #homeView .hm-light{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 16px;border-top:1px solid var(--border-soft)}
+html body #homeView .hm-light.off-line{opacity:.55}
+html body #homeView .hm-name{flex:1 1 170px;min-width:140px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+html body #homeView .hm-name-text{color:var(--text)!important;font-size:14px;cursor:pointer}
+html body #homeView .hm-name-text:hover{color:var(--red-hot)!important}
+html body #homeView .hm-tag{font-size:10px;letter-spacing:1px;padding:1px 6px;border:1px solid var(--border);border-radius:999px;color:var(--muted)!important}
+html body #homeView .hm-tag.bad{color:var(--red-hot)!important;border-color:var(--red)}
+html body #homeView .hm-dot{width:18px;height:18px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:#2a2a2d;flex:none;transition:.2s}
+html body #homeView .hm-range-ph{flex:1 1 150px}
+html body #homeView .hm-range{flex:1 1 150px;min-width:110px;max-width:340px;accent-color:#d92228;cursor:pointer}
+html body #homeView .hm-range.hm-kelvin{flex:0 1 120px;min-width:90px;accent-color:#ffb86b}
+html body #homeView .hm-color{width:34px;height:26px;padding:0;border:1px solid var(--border);border-radius:6px;background:transparent;cursor:pointer;flex:none}
+html body #homeView .hm-sel{max-width:150px}
+
+/* on/off switch */
+html body #homeView .hm-sw{position:relative;display:inline-block;width:42px;height:24px;flex:none;margin:0}
+html body #homeView .hm-sw input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer;z-index:1}
+html body #homeView .hm-sw i{position:absolute;inset:0;border-radius:999px;background:#2a1a1c;border:1px solid var(--border);transition:.15s}
+html body #homeView .hm-sw i::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#8a7f82;transition:.15s}
+html body #homeView .hm-sw input:checked+i{background:rgba(217,34,40,.35);border-color:var(--red)}
+html body #homeView .hm-sw input:checked+i::after{left:20px;background:var(--red-hot);box-shadow:0 0 8px var(--red)}
+html body #homeView .hm-sw input:disabled{cursor:default}

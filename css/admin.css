@@ -1,0 +1,73 @@
+/* Admin tab (PC only). Same look as the Home tab. The page's inline CSS forces red text on most tags, hence the !important colours. */
+html body #adminView .ad-shell{background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+html body #adminView .ad-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px;background:#140a0b;
+  border-bottom:1px solid var(--border);font:12px 'Cascadia Code',Consolas,monospace}
+html body #adminView .ad-bar b{color:var(--red-hot)!important;letter-spacing:1.5px}
+html body #adminView .ad-bar span{color:var(--muted)!important}
+html body #adminView .ad-sp{flex:1}
+html body #adminView .ad-btn{background:var(--raised);border:1px solid var(--border);color:var(--red-hot)!important;border-radius:6px;
+  padding:4px 12px;cursor:pointer;font:inherit;font-size:12px;letter-spacing:1px;transition:.15s}
+html body #adminView .ad-btn:hover:not(:disabled){border-color:var(--red);box-shadow:var(--ring)}
+html body #adminView .ad-btn:disabled{opacity:.4;cursor:default}
+html body #adminView .ad-btn.primary{background:rgba(217,34,40,.22);border-color:var(--red);color:#fff!important;font-weight:600}
+html body #adminView .ad-btn.danger:hover:not(:disabled){background:var(--red);color:#fff!important}
+html body #adminView .ad-msg{padding:8px 16px;font-size:13px;color:#7dffa0!important;background:#0c1410;border-bottom:1px solid var(--border-soft)}
+html body #adminView .ad-msg.bad{color:var(--red-hot)!important;background:#160a0b}
+
+html body #adminView .ad-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:0;border-bottom:1px solid var(--border)}
+html body #adminView .ad-card{padding:16px 18px;background:#0e0a0b}
+html body #adminView .ad-grid .ad-card+.ad-card{border-left:1px solid var(--border)}
+html body #adminView .ad-h{color:var(--red-hot)!important;letter-spacing:2px;font-size:12px;margin:0 0 10px}
+html body #adminView .ad-note{color:var(--muted)!important;font-size:12px;line-height:1.6;margin:8px 0 0}
+html body #adminView .ad-note b{color:var(--text)!important}
+html body #adminView .ad-field{display:block;margin:0 0 12px;color:var(--muted)!important;font-size:11px;letter-spacing:1.5px}
+html body #adminView .ad-in{display:block;width:100%;max-width:340px;margin-top:5px;background:#1a0505!important;color:var(--text)!important;
+  border:1px solid var(--border);border-radius:6px;padding:7px 10px;font:inherit;font-size:14px;letter-spacing:0}
+html body #adminView .ad-in:focus{outline:0;border-color:var(--red);box-shadow:var(--ring)}
+html body #adminView .ad-in option{background:#1a0505!important;color:var(--text)!important}
+html body #adminView .ad-show{display:inline-flex;align-items:center;gap:6px;margin:0 0 14px;color:var(--muted)!important;font-size:12px}
+html body #adminView .ad-show input{accent-color:var(--red)}
+
+html body #adminView .ad-url{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 0;border-top:1px solid var(--border-soft)}
+html body #adminView .ad-url:first-of-type{border-top:0}
+html body #adminView .ad-url code{color:var(--text)!important;font:13px 'Cascadia Code',Consolas,monospace;word-break:break-all}
+html body #adminView .ad-tag{font-size:10px;letter-spacing:1px;padding:1px 7px;border:1px solid var(--border);border-radius:999px;color:var(--muted)!important}
+html body #adminView .ad-tag.good{color:#7dffa0!important;border-color:rgba(125,255,160,.35)}
+html body #adminView .ad-tag.owner{color:var(--red-hot)!important;border-color:var(--red)}
+
+html body #adminView .ad-accounts{padding:6px 0 10px}
+html body #adminView .ad-accounts .ad-h{padding:12px 18px 0}
+html body #adminView .ad-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 18px;border-top:1px solid var(--border-soft)}
+html body #adminView .ad-name{flex:1 1 180px;min-width:140px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:var(--text)!important;font-size:15px}
+html body #adminView .ad-meta{flex:1 1 200px;color:var(--muted)!important;font-size:12px}
+html body #adminView .ad-actions{display:flex;gap:8px}
+html body #adminView .ad-empty{padding:16px 18px;color:var(--muted)!important;font-size:13px}
+
+/* Web Addresses: local + tunnel rows, switch, QR window */
+html body #adminView .ad-url-k{width:64px;flex:none;color:var(--muted)!important;font-size:11px;letter-spacing:1.5px}
+html body #adminView .ad-tunnel{border-top:1px solid var(--border-soft)}
+html body #adminView .ad-tag.bad{color:var(--red-hot)!important;border-color:var(--red)}
+html body #adminView .ad-note.bad{color:var(--red-hot)!important}
+html body #adminView .ad-switch{display:flex;align-items:center;gap:10px;margin:12px 0 2px;cursor:pointer;user-select:none}
+html body #adminView .ad-switch input{position:absolute;opacity:0;width:0;height:0}
+html body #adminView .ad-slider{position:relative;flex:none;width:42px;height:22px;border-radius:999px;background:var(--raised);
+  border:1px solid var(--border);transition:.2s}
+html body #adminView .ad-slider::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;
+  background:var(--muted);transition:.2s}
+html body #adminView .ad-switch input:checked+.ad-slider{background:rgba(217,34,40,.3);border-color:var(--red);box-shadow:var(--ring)}
+html body #adminView .ad-switch input:checked+.ad-slider::after{transform:translateX(20px);background:#fff}
+html body #adminView .ad-switch input:disabled+.ad-slider{opacity:.55}
+html body #adminView .ad-switch input:focus-visible+.ad-slider{box-shadow:var(--ring)}
+html body #adminView .ad-switch-t{color:var(--text)!important;font-size:12px;letter-spacing:1.5px}
+html body #adminView .ad-switch-s{color:var(--muted)!important;font-size:11px;letter-spacing:1px}
+html body #adminView .ad-switch input:checked~.ad-switch-s{color:#7dffa0!important}
+
+html body #adminView .ad-qr-back{position:fixed;inset:0;z-index:5000;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.72);backdrop-filter:blur(3px)}
+html body #adminView .ad-qr-card{display:flex;flex-direction:column;align-items:center;gap:12px;max-width:min(92vw,420px);max-height:92vh;
+  overflow:auto;padding:18px 20px;background:var(--panel);border:1px solid var(--red);border-radius:14px;box-shadow:var(--ring)}
+html body #adminView .ad-qr-card img{width:100%;max-width:340px;height:auto;border-radius:10px;background:#fff}
+html body #adminView .ad-qr-card code{color:var(--text)!important;font:12px 'Cascadia Code',Consolas,monospace;word-break:break-all;text-align:center}
+html body #adminView .ad-qr-note,html body #adminView .ad-qr-miss{color:var(--red-hot)!important;font-size:12px;text-align:center}
+html body #adminView .ad-switch.warn input:checked+.ad-slider{background:rgba(255,77,77,.4);border-color:var(--red-hot)}
+html body #adminView .ad-switch.warn input:checked~.ad-switch-s{color:var(--red-hot)!important}

@@ -1,0 +1,53 @@
+/* Sidebar hide/show + collapsible "Apps" group (PC) and the same group in the phone menu. */
+
+/* ---- hide / show the whole left bar ---- */
+html body .pc-sidebar{transition:transform .25s ease,visibility 0s linear 0s}
+html body.sb-hidden .pc-sidebar{transform:translateX(-100%);visibility:hidden;transition:transform .25s ease,visibility 0s linear .25s;box-shadow:none!important}
+html body .pc-container,html body .pc-footer{transition:margin-left .25s ease}
+html body.sb-hidden .pc-container,html body.sb-hidden .pc-footer{margin-left:0!important}
+
+html body .pc-sidebar .m-header{position:relative}
+.sb-hide-btn{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  background:none;border:1px solid transparent;border-radius:8px;cursor:pointer;transition:.15s}
+.sb-hide-btn svg{width:20px;height:20px;fill:none;stroke:var(--muted);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.sb-hide-btn:hover{background:rgba(217,34,40,.15);border-color:var(--red-deep)}
+.sb-hide-btn:hover svg{stroke:var(--red-hot)}
+html body #navBar #sbToggle{font-weight:600}
+
+/* ---- Apps group ---- */
+.pc-sidebar .ap-group{list-style:none}
+html body .pc-sidebar .ap-head{display:flex;align-items:center;gap:0;width:calc(100% - 20px);margin:2px 10px;padding:0;background:none;border:0;border-radius:8px;
+  cursor:pointer;text-align:left;font:inherit;color:var(--text)!important;transition:background .15s}
+html body .pc-sidebar .ap-head .pc-micon,html body .pc-sidebar .ap-head .pc-mtext{color:var(--text)!important}
+html body .pc-sidebar .ap-head{padding:10px 12px}
+html body .pc-sidebar .ap-head .pc-micon{margin-right:12px}
+html body .pc-sidebar .ap-head .pc-mtext{flex:1;font-weight:600}
+html body .pc-sidebar .ap-head:hover{background:rgba(217,34,40,.12)}
+html body .pc-sidebar .ap-head:focus-visible{outline:0;box-shadow:var(--ring)}
+html body .pc-sidebar .ap-group.has-active .ap-head{background:rgba(217,34,40,.14)}
+html body .pc-sidebar .ap-group.has-active .ap-head .pc-micon{color:var(--red-hot)!important}
+.ap-chev{width:18px;height:18px;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s ease;flex:none}
+.ap-group.open .ap-chev{transform:rotate(180deg)}
+
+/* smooth open/close without knowing the height */
+.ap-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .25s ease;visibility:hidden;transition:grid-template-rows .25s ease,visibility 0s linear .25s}
+.ap-group.open .ap-body{grid-template-rows:1fr;visibility:visible;transition:grid-template-rows .25s ease,visibility 0s}
+.ap-inner{overflow:hidden;min-height:0}
+.ap-list{list-style:none;margin:2px 0 6px 28px;padding:0 0 0 6px;border-left:1px solid var(--divider,#4a1c28)}
+html body .pc-sidebar .ap-list .pc-item>a{margin:2px 8px 2px 4px}
+html body .pc-sidebar .ap-list .pc-item>a.active{background:rgba(217,34,40,.2)!important}
+html body .pc-sidebar .ap-list .pc-item>a.active .pc-micon,html body .pc-sidebar .ap-list .pc-item>a.active .pc-mtext{color:var(--red-hot)!important}
+
+/* ---- phone menu ---- */
+.pd-apps,.pd-apps-head{display:none}
+@media (pointer: coarse) and (max-width: 820px){
+  .pd-nav button.pd-apps-head{display:flex;align-items:center;justify-content:space-between;font-weight:600}
+  .pd-chev{width:20px;height:20px;fill:none;stroke:#9a9a9f;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s}
+  .pd-apps-head[aria-expanded="true"] .pd-chev{transform:rotate(180deg)}
+  .pd-apps{display:grid;grid-template-rows:0fr;transition:grid-template-rows .25s ease;visibility:hidden}
+  .pd-apps.open{grid-template-rows:1fr;visibility:visible}
+  .pd-apps-in{overflow:hidden;min-height:0;display:flex;flex-direction:column;margin-left:14px;padding-left:6px;border-left:1px solid #3a0f12}
+}
+@media (prefers-reduced-motion: reduce){
+  html body .pc-sidebar,html body .pc-container,html body .pc-footer,.ap-body,.ap-chev,.pd-apps{transition:none!important}
+}

@@ -1,0 +1,2504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Rasputin</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui, viewport-fit=cover">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <!-- who is signed in + their saved settings; account-sync.js must run before any other script -->
+  <script>window.RASPUTIN_ACCOUNT = {{ account_boot|tojson }};</script>
+  <script src="{{ url_for('static', filename='js/account-sync.js') }}"></script>
+  <meta name="theme-color" content="#1a0505">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Rasputin">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/pwa/apple-touch-icon.png">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="Mantis Bootstrap 5 Template">
+  <meta name="keywords" content="Mantis, Bootstrap 5, Admin Template">
+  <meta name="author" content="CodedThemes">
+
+  <link rel="icon" href="{{ url_for('static', filename='assets/images/favicon.svg') }}" type="image/x-icon">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" id="main-font-link">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/fonts/tabler-icons.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/fonts/feather.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/fonts/fontawesome.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/fonts/material.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/style.css') }}" id="main-style-link">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/style-preset.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    background-color: #2e2e2e !important;
+    color: red !important;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pc-container {
+    flex: 1 0 auto;
+  }
+
+  .pc-footer {
+    flex-shrink: 0;
+    background-color: #3a3a3a !important;
+    color: red !important;
+    text-align: center;
+    padding: 10px;
+  }
+
+  .card,
+  .card-body,
+  #chatbox,
+  input#userInput {
+    color: red !important;
+  }
+
+  .card {
+    background-color: #3a3a3a !important;
+    border: 1px solid #555 !important;
+  }
+
+  #chatbox {
+    background-color: #444 !important;
+    border-color: #666 !important;
+    overflow-y: auto;
+  }
+
+  input#userInput {
+    background-color: #555 !important;
+    border-color: #777 !important;
+    color: white !important;
+  }
+
+  input#userInput::placeholder {
+    color: white !important;
+    opacity: 0.6;
+  }
+
+  .pc-sidebar {
+    background-color: #3a3a3a !important;
+    color: red !important;
+  }
+
+  .pc-sidebar .pc-item a,
+  .pc-sidebar .pc-item label,
+  .pc-sidebar .pc-micon,
+  .pc-sidebar .pc-mtext {
+    color: red !important;
+  }
+
+  .card * {
+    color: red !important;
+  }
+
+  .text-muted,
+  .text-sm,
+  .text-primary,
+  .text-success,
+  .text-warning,
+  .text-danger,
+  .text-body {
+    color: red !important;
+  }
+
+  h1, h2, h3, h4, h5, h6,
+  p, span, label, a, li, div, strong, button {
+    color: red !important;
+  }
+
+  .dropdown-menu,
+  .dropdown-header,
+  .list-group-item {
+    color: red !important;
+    background-color: #3a3a3a !important;
+  }
+
+  .text-end.text-muted {
+    color: white !important;
+  }
+
+  .text-end.text-muted strong {
+    color: white !important;
+  }
+
+  button.btn.btn-primary {
+    color: white !important;
+  }
+
+  /* Hover effect for chat entries */
+  .chat-entry:hover {
+    background-color: #4a4a4a !important;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  /* Buttons inside chat entry */
+  .chat-actions button {
+    opacity: 0.8;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .chat-actions button:hover {
+    opacity: 1;
+    color: white !important;
+  }
+</style>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/rasputin-ui.css') }}">
+{% if show_admin %}  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endif %}{% if show_discord %}  <link rel="stylesheet" href="{{ url_for('static', filename='css/discord.css') }}">
+{% endif %}{% if show_games %}  <link rel="stylesheet" href="{{ url_for('static', filename='css/games.css') }}">
+{% endif %}{% if show_security %}  <link rel="stylesheet" href="{{ url_for('static', filename='css/security(CS).css') }}">
+{% endif %}  <link rel="stylesheet" href="{{ url_for('static', filename='css/layout-nav.css') }}">
+<style>
+  /* ===== Phone app layout (touch screens that are phone-sized). The PC window never matches this. ===== */
+  #phoneBar, #phoneScrim, #phoneDrawer, .vs-close { display: none; }
+  @media (pointer: coarse) and (max-width: 820px) {
+    :root { --bar-h: 52px; --vvh: 100dvh; }
+    html body { padding-top: calc(var(--bar-h) + env(safe-area-inset-top, 0px)); min-height: 0 !important; overscroll-behavior-y: none; }
+    html body .pc-sidebar, html body .pc-footer, html body #navBar, html body #statCards,
+    html body .loader-bg { display: none !important; }
+    html body .pc-container { margin-left: 0 !important; width: 100% !important; }
+    html body .pc-content { padding: 0 !important; }
+
+    #phoneBar { display: flex; align-items: center; gap: 4px; position: fixed; top: 0; left: 0; right: 0; z-index: 1040;
+      height: calc(var(--bar-h) + env(safe-area-inset-top, 0px)); padding: env(safe-area-inset-top, 0px) 6px 0;
+      background: #09090a; border-bottom: 1px solid #241214; }
+    #phoneBar button { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+      background: none; border: 0; border-radius: 22px; -webkit-tap-highlight-color: transparent; }
+    #phoneBar button:active { background: rgba(217,34,40,.25); }
+    #phoneBar svg, #phoneDrawer svg { width: 24px; height: 24px; fill: none; stroke: #ff4d4d; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    #phoneTitle { flex: 1; text-align: center; color: #ececec; font: 600 17px 'Inter', system-ui, sans-serif; letter-spacing: .5px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    #phoneScrim { display: block; position: fixed; inset: 0; z-index: 1050; background: rgba(0,0,0,.6);
+      opacity: 0; pointer-events: none; transition: opacity .2s; }
+    #phoneScrim.open { opacity: 1; pointer-events: auto; }
+    #phoneDrawer { display: flex; flex-direction: column; position: fixed; top: 0; bottom: 0; left: 0; z-index: 1060;
+      width: min(82vw, 330px); background: #111113; border-right: 1px solid #3a0f12;
+      padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+      transform: translateX(-102%); transition: transform .22s ease; overflow: hidden; }
+    #phoneDrawer.open { transform: none; }
+    #phoneDrawer, #phoneDrawer button { font-family: 'Inter', system-ui, sans-serif; }
+    .pd-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px;
+      color: #ff4d4d; letter-spacing: 3px; font-weight: 600; }
+    .pd-head button { background: none; border: 0; color: #ff4d4d; font-size: 28px; line-height: 1; padding: 0 6px; }
+    #phoneDrawer .pd-new { margin: 4px 12px 10px; padding: 12px 14px; text-align: left; font-size: 15px; color: #fff;
+      background: rgba(217,34,40,.22); border: 1px solid #d92228; border-radius: 12px; }
+    .pd-nav { display: flex; flex-direction: column; padding: 0 8px; }
+    .pd-nav button, .pc-chat-row .pc-chat-open { background: none; border: 0; color: #ececec; text-align: left; font-size: 15px;
+      padding: 12px 12px; border-radius: 10px; -webkit-tap-highlight-color: transparent; }
+    .pd-nav button.active, .pc-chat-row.active { background: rgba(217,34,40,.18); }
+    .pd-nav button:active, .pc-chat-row:active { background: rgba(217,34,40,.3); }
+    .pd-label { padding: 14px 20px 6px; color: #9a9a9f; font-size: 11px; letter-spacing: 1.5px; }
+    #phoneChatList { flex: 1; overflow-y: auto; padding: 0 8px 12px; -webkit-overflow-scrolling: touch; }
+    .pc-chat-row { display: flex; align-items: center; border-radius: 10px; }
+    .pc-chat-row .pc-chat-open { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pc-chat-row .pc-chat-act { background: none; border: 0; color: #9a9a9f; font-size: 15px; padding: 10px 8px; }
+    .pd-empty { color: #9a9a9f; padding: 8px 12px; font-size: 14px; }
+    .pd-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 16px; border-top: 1px solid #241214; }
+    .pd-foot span { color: #9a9a9f; font-size: 14px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pd-foot button { background: none; border: 1px solid #7a0000; color: #ff4d4d; border-radius: 8px; padding: 8px 14px; font-size: 14px; flex: none; }
+
+    /* chat fills the screen, composer pinned at the bottom */
+    html body #chatInterfaceView .chat-shell { height: calc(var(--vvh) - var(--bar-h) - env(safe-area-inset-top, 0px));
+      min-height: 0; border: 0; border-radius: 0; background: #09090a; }
+    html body #chatbox { padding: 8px 0 !important; }
+    .msg-row { padding: 8px 14px !important; gap: 10px !important; }
+    .composer { padding: 8px 10px calc(10px + env(safe-area-inset-bottom, 0px)) !important; border-top: 0 !important; background: #09090a !important; }
+    .composer-box { border-radius: 26px !important; }
+    .composer-hint { display: none; }
+    #userInput { font-size: 16px !important; }   /* 16px stops iPhone from zooming in on focus */
+    .term-shell { height: calc(var(--vvh) - var(--bar-h) - env(safe-area-inset-top, 0px) - 8px) !important; border-radius: 0; }
+    #aiCoreView, #homeView, #chessView, #terminalView { padding-left: 8px; padding-right: 8px; }
+    /* ---- sizing fixes: the PC window's zoom / auto-fit code must not run on phones ---- */
+    html body #zoomRoot { zoom: 1 !important; }                       /* ignore the saved per-tab zoom */
+    html body #chatInterfaceView .chat-shell,
+    html body #terminalView .term-shell {                              /* ignore heights set by the PC fit script */
+      height: calc(var(--vvh) - var(--bar-h) - env(safe-area-inset-top, 0px)) !important; }
+    html body #zoomRoot, html body #chatInterfaceView, html body #aiCoreView, html body #terminalView { width: 100% !important; max-width: 100% !important; }
+    html body .pc-container, html body .pc-content, html body .card, html body .card-body { max-width: 100% !important; }
+    html body .card { margin-bottom: 8px; }
+    html body .card-body { padding: 10px !important; }
+
+    /* ---- AI Core: smaller 3D box that never traps your finger, so the page scrolls ---- */
+    html body #coreBox { height: min(46vh, 420px) !important; touch-action: pan-y; }
+    html body #heroCanvas { pointer-events: none !important; touch-action: pan-y; }
+    html body #aiCoreView { overflow-x: hidden; padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
+    html body #voicePanel { margin-top: 12px !important; }
+    html body #voicePanel > div:first-child { display: grid !important; grid-template-columns: 1fr; gap: 8px !important; }
+    html body #voicePanel button { width: 100%; padding: 14px 10px !important; font-size: 14px !important; letter-spacing: 1.5px !important; }
+    html body #voiceSettings { flex-direction: column; align-items: stretch !important; gap: 12px !important; font-size: 14px !important; }
+    html body #voiceSettings label { display: flex; flex-direction: column; gap: 6px; text-align: left; }
+    html body #voiceSettings select { max-width: 100% !important; width: 100%; font-size: 16px !important; padding: 10px !important; }
+    html body #voiceSettings input[type=range] { width: 100% !important; }
+    html body #voiceStatus { font-size: 13px; word-break: break-word; }
+
+    /* ===== LOCKED APP SCREEN: nothing scrolls except the chat messages (and long lists inside a tab) ===== */
+    html, html body { height: var(--vvh) !important; overflow: hidden !important; overscroll-behavior: none; }
+    html body { position: fixed; top: 0; left: 0; right: 0; width: 100%; padding-top: 0 !important; display: block !important; transform: translateY(var(--vvt, 0px)); }
+    html body .pc-container { position: fixed !important; left: 0; right: 0; top: calc(var(--bar-h) + env(safe-area-inset-top, 0px));
+      height: calc(var(--vvh) - var(--bar-h) - env(safe-area-inset-top, 0px)) !important;
+      margin: 0 !important; padding: 0 !important; overflow: hidden !important; }
+    html body .pc-content { height: 100% !important; padding: 0 !important; margin: 0 !important; overflow: hidden !important; }
+    html body #zoomRoot { height: 100% !important; overflow: hidden !important; }
+    html body #chatInterfaceView, html body #aiCoreView, html body #chessView, html body #terminalView, html body #homeView {
+      height: 100% !important; box-sizing: border-box; }
+    html body #homeView, html body #chessView, html body #terminalView { overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+
+    /* chat: the message list is the only thing that scrolls */
+    html body #chatInterfaceView .chat-shell { height: 100% !important; min-height: 0 !important; }
+    html body #chatbox { flex: 1 1 auto !important; min-height: 0; overflow-y: auto !important; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+    html body .composer { flex: 0 0 auto; }
+    html body #terminalView .term-shell { height: 100% !important; }
+
+    /* AI Core: everything is squeezed to fit one screen (the 3D box takes whatever space is left) */
+    html body #aiCoreView > .card { height: 100%; margin: 0 !important; background: transparent !important; border: 0 !important; }
+    html body #aiCoreView .card-body { height: 100%; display: flex; flex-direction: column; padding: 6px 8px !important; }
+    html body #coreTitle { font-size: 11px !important; margin: 0 0 6px !important; flex: 0 0 auto; }
+    html body #coreBox { flex: 1 1 auto; height: auto !important; min-height: 120px; }
+    html body #voicePanel { flex: 0 0 auto; margin-top: 8px !important; }
+    html body #voicePanel > div:first-child { grid-template-columns: 1fr 1fr !important; gap: 6px !important; }
+    html body #voiceOptionsBtn { grid-column: 1 / -1; }
+    html body #voicePanel button { padding: 10px 6px !important; font-size: 12px !important; letter-spacing: 1px !important; }
+    html body #voiceStatus { margin-top: 8px !important; font-size: 12px; }
+    html body #voicePanel > div[style*="min-height: 40px"] { margin-top: 4px !important; min-height: 0 !important; font-size: 12px !important; }
+    html body #voiceNote { display: none; }
+    html body #voiceSettings { position: fixed; left: 0; right: 0; bottom: 0; z-index: 1030; margin: 0 !important;
+      max-height: 72%; overflow-y: auto; background: #111113; border-top: 1px solid #7a0000; border-radius: 16px 16px 0 0;
+      padding: 14px 16px calc(16px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -10px 30px rgba(0,0,0,.6); }
+    .vs-close { display: block; position: sticky; top: -14px; z-index: 2; background: #1a0505; border: 1px solid #7a0000; color: #ff4d4d; border-radius: 8px; padding: 12px;
+      font-family: 'Share Tech Mono','Courier New',monospace; letter-spacing: 2px; font-size: 13px; }
+
+    /* Chess: smaller board and a compact side panel so it fits */
+    html body #chessView .card, html body #chessView .card-body { background: transparent !important; border: 0 !important; margin: 0 !important; }
+    html body #chessTitle, html body #chessMoves, html body #chessEngine { display: none !important; }
+    html body #chessLayout { gap: 10px !important; }
+    html body #chessBoard { width: min(94vw, 46vh) !important; }
+    html body #chessBoard .pc { font-size: clamp(22px, min(7.2vw, 4.6vh), 40px) !important; }
+    html body #chessSay { min-height: 0 !important; margin-top: 6px !important; }
+    html body #chessStatus { margin-top: 8px !important; }
+  }
+</style>
+</head>
+<!-- [Head] end -->
+<!-- [Body] Start -->
+
+<body data-pc-preset="preset-1" data-pc-direction="ltr" data-pc-theme="light" style="display: flex; flex-direction: column; min-height: 100vh;">
+  <!-- PHONE APP SHELL (ChatGPT / Gemini style): top bar + slide-out menu. Hidden on the PC window. -->
+  <header id="phoneBar">
+    <button type="button" id="phoneMenuBtn" aria-label="Menu" onclick="phoneDrawer(true)">
+      <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h10M4 17h16"/></svg></button>
+    <div id="phoneTitle">Rasputin</div>
+    <button type="button" id="phoneNewBtn" aria-label="New chat" onclick="phoneNewChat()">
+      <svg viewBox="0 0 24 24"><path d="M12 20h8"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg></button>
+  </header>
+  <div id="phoneScrim" onclick="phoneDrawer(false)"></div>
+  <aside id="phoneDrawer" aria-hidden="true">
+    <div class="pd-head"><span>RASPUTIN</span>
+      <button type="button" aria-label="Close menu" onclick="phoneDrawer(false)">&times;</button></div>
+    <button type="button" class="pd-new" onclick="phoneNewChat()">+ &nbsp;New chat</button>
+    <nav class="pd-nav">
+      <button type="button" data-view="chat" onclick="phoneGo('chat')">Chat</button>
+      <button type="button" class="pd-apps-head" id="phoneAppsHead" aria-expanded="false">Apps <svg class="pd-chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+      <div class="pd-apps" id="phoneApps"><div class="pd-apps-in">
+      <button type="button" data-view="core" onclick="phoneGo('core')">AI Core</button>
+      <button type="button" data-view="home" onclick="phoneGo('home')">Home</button>
+      <button type="button" data-view="chess" onclick="phoneGo('chess')">Chess</button>
+      <button type="button" data-view="terminal" onclick="phoneGo('terminal')">Terminal</button>
+{% if show_games %}      <button type="button" data-view="games" onclick="phoneGo('games')">Games</button>
+{% endif %}{% if show_discord %}      <button type="button" data-view="discord" onclick="phoneGo('discord')">Discord</button>
+{% endif %}{% if show_security %}      <button type="button" data-view="security" onclick="phoneGo('security')">Security</button>
+{% endif %}      </div></div>
+    </nav>
+    <div class="pd-label">CHATS</div>
+    <div id="phoneChatList"></div>
+    <div class="pd-foot"><span>{{ account_boot.username }}</span><button type="button" onclick="signOut()">Sign out</button></div>
+  </aside>
+
+
+  <!-- Pre-loader -->
+  <div class="loader-bg">
+    <div class="loader-track">
+      <div class="loader-fill"></div>
+    </div>
+  </div>
+<!-- [ Pre-loader ] End -->
+
+<!-- [ Sidebar Menu ] start -->
+<nav class="pc-sidebar">
+  <div class="navbar-wrapper">
+    <div class="m-header">
+      <a href="../dashboard/index.html" class="b-brand text-primary">
+        <img src="{{ url_for('static', filename='assets/images/logo-dark.svg') }}" alt="Logo">
+      </a>
+      <button type="button" class="sb-hide-btn" onclick="toggleSidebar(false)" title="Hide menu (Ctrl+B)" aria-label="Hide menu">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/><path d="M16 10l-2 2 2 2"/></svg>
+      </button>
+    </div>
+    <div class="navbar-content">
+      <ul class="pc-navbar">
+        
+        <li class="pc-item">
+          <a href="#" class="pc-link" onclick="switchView('chat'); resetChat();">
+            <span class="pc-micon"><i class="ti ti-plus"></i></span>
+            <span class="pc-mtext">New Chat</span>
+          </a>
+        </li>
+
+        <!-- APPS GROUP: every tab lives in here. Closed on every start-up; click to open. Rename it by editing the word "Apps" below. -->
+        <li class="pc-item ap-group" id="appsGroup">
+          <button type="button" class="ap-head" id="appsHead" aria-expanded="false" aria-controls="appsBody">
+            <span class="pc-micon"><svg class="nav-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.500" height="6.500" rx="1.500"/><rect x="13.500" y="4" width="6.500" height="6.500" rx="1.500"/><rect x="4" y="13.500" width="6.500" height="6.500" rx="1.500"/><rect x="13.500" y="13.500" width="6.500" height="6.500" rx="1.500"/></svg></span>
+            <span class="pc-mtext">Apps</span>
+            <svg class="ap-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="ap-body" id="appsBody"><div class="ap-inner"><ul class="ap-list">
+        <!-- NEW: Tab to switch to the 3D AI Core View -->
+        <li class="pc-item">
+          <a href="#" class="pc-link" onclick="switchView('core')">
+            <span class="pc-micon"><svg class="nav-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M19 9h3M19 15h3M2 9h3M2 15h3"/></svg></span>
+            <span class="pc-mtext">AI Core</span>
+          </a>
+        </li>
+
+        <li class="pc-item">
+          <a href="#" class="pc-link" onclick="switchView('home')">
+            <span class="pc-micon"><svg class="nav-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.500 12 4l9 7.500"/><path d="M5.500 10v10h13V10"/><path d="M10 20v-5.500h4V20"/></svg></span>
+            <span class="pc-mtext">Home</span>
+          </a>
+        </li>
+
+        <li class="pc-item">
+          <a href="#" class="pc-link" onclick="switchView('chess')">
+            <span class="pc-micon"><svg class="nav-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="6.500" r="3"/><path d="M9.500 11h5"/><path d="M10.200 11c.2 3.200-.9 5.300-2.700 7h9c-1.800-1.700-2.900-3.800-2.700-7"/><rect x="6" y="18" width="12" height="3" rx="1"/></svg></span>
+            <span class="pc-mtext">Chess</span>
+          </a>
+        </li>
+
+        <li class="pc-item">
+          <a href="#" class="pc-link" onclick="switchView('terminal')">
+            <span class="pc-micon"><svg class="nav-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17l6-6-6-6"/><path d="M12 19h8"/></svg></span>
+            <span class="pc-mtext">Terminal</span>
+          </a>
+        </li>
+{% if show_games %}
+        <li class="pc-item">
+          <a href="#" class="pc-link" onclick="switchView('games')">
+            <span class="pc-micon"><svg class="nav-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="10" rx="5"/><path d="M7 9.800v4.400M4.800 12h4.400"/><circle cx="17" cy="10.300" r=".9"/><circle cx="17" cy="13.700" r=".9"/><circle cx="15.300" cy="12" r=".9"/><circle cx="18.700" cy="12" r=".9"/><path d="M10.200 14.800h1.600M12.400 14.800h1.600"/></svg></span>
+            <span class="pc-mtext">Games</span>
+          </a>
+        </li>
+{% endif %}
+{% if show_admin %}
+        <li class="pc-item">
+          <a href="#" class="pc-link" onclick="switchView('admin')">
+            <span class="pc-micon"><svg class="nav-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7.500 3v5.500c0 4.700-3.100 8-7.500 9.500-4.400-1.500-7.500-4.800-7.500-9.500V6z"/><path d="M9 12l2.200 2.200L15.500 10"/></svg></span>
+            <span class="pc-mtext">Admin</span>
+          </a>
+        </li>
+{% endif %}
+{% if show_discord %}
+        <li class="pc-item">
+          <a href="#" class="pc-link" onclick="switchView('discord')">
+            <span class="pc-micon"><svg class="nav-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6.500C7 5.500 9 5 9.500 5l.7 1.300a11 11 0 0 1 3.600 0L14.500 5c.5 0 2.500.5 4.500 1.500 2 3 2.700 6.200 2.300 9.500-1.500 1.100-3 1.700-4.200 2l-1-1.700c.6-.2 1.100-.5 1.600-.8-1 .4-2.700.9-4.200.9h-1c-1.500 0-3.200-.5-4.200-.9.500.3 1 .6 1.600.8l-1 1.700c-1.200-.3-2.700-.9-4.200-2C2.300 12.700 3 9.500 5 6.500z"/><circle cx="9.300" cy="12" r="1.200"/><circle cx="14.700" cy="12" r="1.200"/></svg></span>
+            <span class="pc-mtext">Discord</span>
+          </a>
+        </li>
+{% endif %}
+{% if show_security %}
+        <li class="pc-item">
+          <a href="#" class="pc-link" onclick="switchView('security')">
+            <span class="pc-micon"><svg class="nav-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.500-2.500h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.500"/></svg></span>
+            <span class="pc-mtext">Security</span>
+          </a>
+        </li>
+{% endif %}
+          </ul></div></div>
+        </li>
+
+        <li class="pc-item pc-caption">
+          <label>Previous Chats</label>
+          <i class="ti ti-message-circle"></i>
+        </li>
+
+        <!-- Dynamic previous chats will be appended here -->
+        <ul class="pc-navbar" id="chatList"></ul>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+<!-- [ Sidebar Menu ] end -->
+
+<!-- [ Main Content ] start -->
+<div class="pc-container" style="margin-top: 0 !important; padding-top: 0 !important;">
+  <div class="pc-content" style="margin-top: 0 !important; padding-top: 0 !important; padding-bottom: 80px;">
+
+    <!-- Back / forward / reload and zoom controls (zoom is saved per tab) -->
+    <style>
+      #navBar { position: sticky; top: 0; z-index: 1020; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+                padding: 8px 0 10px; margin-bottom: 8px; background: #2e2e2e;
+                font-family: 'Share Tech Mono','Courier New',monospace; font-size: 13px; letter-spacing: 1px; }
+      #navBar button { background: #1a0505; border: 1px solid #7a0000; color: #ff4d4d !important; padding: 4px 12px;
+                       border-radius: 4px; font-family: inherit; letter-spacing: 1px; cursor: pointer; }
+      #navBar button:hover:not(:disabled) { border-color: #ff4d4d; }
+      #navBar button:disabled { opacity: 0.35; cursor: default; }
+    </style>
+    <div id="navBar">
+      <button type="button" id="sbToggle" onclick="toggleSidebar()" title="Show / hide the menu (Ctrl+B)" aria-label="Show or hide the menu">&#9776; MENU</button>
+      <button id="navBack" onclick="history.back()" title="Back (Alt+Left)" disabled>&#8592; BACK</button>
+      <button id="navFwd" onclick="history.forward()" title="Forward (Alt+Right)" disabled>FORWARD &#8594;</button>
+      <button onclick="location.reload()" title="Reload the page (F5)">&#8635; RELOAD</button>
+      <span id="llmChip" title="Open the Terminal tab for details">LLM // ...</span>
+      <span id="whoChip" title="Signed in as">USER // {{ account_boot.username|upper }}</span>
+      <span style="flex: 1;"></span>
+      <span>ZOOM // <span id="zoomTab">CHAT</span></span>
+      <button onclick="stepZoom(-1)" title="Zoom out (Ctrl and minus)">&minus;</button>
+      <span id="zoomLabel" style="min-width: 48px; text-align: center;">100%</span>
+      <button onclick="stepZoom(1)" title="Zoom in (Ctrl and plus)">+</button>
+      <button onclick="setTabZoom(1)" title="Reset this tab's zoom (Ctrl and 0)">RESET</button>
+      <button onclick="autoFitZoom()" title="Fit zoom to this window">AUTO</button>
+      <button onclick="signOut()" title="Sign out of this account">SIGN OUT</button>
+      <button id="exitBtn" onclick="exitApp()" title="Shut down Rasputin safely">EXIT</button>
+    </div>
+
+    <div id="zoomRoot">
+    <div id="statCards" class="d-flex flex-wrap justify-content-between gap-3" style="margin-bottom: 20px;">
+      <!-- CPU Usage -->
+      <div class="card" style="flex: 1 1 30%; min-width: 250px;">
+        <div class="card-body text-center" onclick="toggleChart('cpu')">
+          <h6 class="mb-2 text-red">CPU Usage</h6>
+          <div id="cpuPercent" style="font-size: 24px;">--%</div>
+          <div id="cpuChart" style="height: 150px; display: none; margin-top: 10px;"></div>
+        </div>
+      </div>
+
+      <!-- Memory Usage -->
+      <div class="card" style="flex: 1 1 30%; min-width: 250px;">
+        <div class="card-body text-center" onclick="toggleChart('memory')">
+          <h6 class="mb-2 text-red">Memory Usage</h6>
+          <div id="memoryPercent" style="font-size: 24px;">--%</div>
+          <div id="memoryChart" style="height: 150px; display: none; margin-top: 10px;"></div>
+        </div>
+      </div>
+
+      <!-- GPU Usage -->
+      <div class="card" style="flex: 1 1 30%; min-width: 250px;">
+        <div class="card-body text-center" onclick="toggleChart('gpu')">
+          <h6 class="mb-2 text-red">GPU Usage</h6>
+          <div id="gpuPercent" style="font-size: 24px;">--%</div>
+          <div id="gpuChart" style="height: 150px; display: none; margin-top: 10px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 1: CHAT INTERFACE -->
+    <div id="chatInterfaceView">
+     <div class="chat-shell">
+      <div id="chatbox"></div>
+      <div class="composer">
+        <div class="composer-box">
+          <textarea id="userInput" rows="1" placeholder="Message Rasputin..."></textarea>
+          <button id="sendBtn" onclick="sendMessage()" title="Send (Enter)">&#10148;</button>
+        </div>
+        <div class="composer-hint">Enter to send &middot; Shift+Enter for a new line</div>
+      </div>
+     </div>
+    </div>
+
+    <!-- VIEW 2: 3D AI CORE ANIMATION VIEW (Hidden by default) -->
+    <div id="aiCoreView" style="display: none; width: 100%; text-align: center;">
+      <div class="card" style="background-color: #3a3a3a !important; border: 1px solid #555 !important;">
+        <div class="card-body text-center">
+          <h6 id="coreTitle" class="mb-3" style="color: #ff4d4d !important; letter-spacing: 2px;">RASPUTIN // 3D CORE PROTOCOL: ACTIVE</h6>
+          
+          <div id="coreBox" style="position: relative; width: 100%; height: 900px; background: #0c0d10; border-radius: 8px; overflow: hidden;">
+            <canvas id="heroCanvas" style="width: 100%; height: 100%; display: block;"></canvas>
+          </div>
+
+          <!-- VOICE LINK CONTROLS (voice sessions are never saved) -->
+          <div id="voicePanel" style="margin-top: 18px;">
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+              <button id="voiceOnBtn" onclick="startVoice()"
+                style="background:#1a0505; border:1px solid #b31212; padding:10px 22px; border-radius:4px; font-family:'Share Tech Mono','Courier New',monospace; letter-spacing:2px; cursor:pointer;">
+                ACTIVATE VOICE LINK
+              </button>
+              <button id="voiceOffBtn" onclick="stopVoice()" disabled
+                style="background:#1a0505; border:1px solid #7a0000; padding:10px 22px; border-radius:4px; font-family:'Share Tech Mono','Courier New',monospace; letter-spacing:2px; cursor:pointer; opacity:0.4;">
+                DEACTIVATE VOICE LINK
+              </button>
+              <button id="voiceOptionsBtn" onclick="toggleVoiceOptions()"
+                style="background:#1a0505; border:1px solid #7a0000; padding:10px 22px; border-radius:4px; font-family:'Share Tech Mono','Courier New',monospace; letter-spacing:2px; cursor:pointer;">
+                OPTIONS
+              </button>
+            </div>
+            <style>
+              #voiceSettings select, #voiceSettings option { background:#1a0505 !important; color:#ff4d4d !important; }
+              #voiceSettings select { border:1px solid #7a0000; border-radius:4px; padding:6px 8px; max-width:280px; font-family:'Share Tech Mono','Courier New',monospace; }
+              #voiceSettings input[type=range] { accent-color:#b31212; vertical-align:middle; width:110px; }
+            </style>
+            <div id="voiceSettings" style="margin-top:16px; display:none; gap:16px; justify-content:center; flex-wrap:wrap; align-items:center; font-family:'Share Tech Mono','Courier New',monospace; font-size:13px; letter-spacing:1px;">
+              <button type="button" class="vs-close" onclick="toggleVoiceOptions()">CLOSE OPTIONS</button>
+              <label>MIC
+                <select id="micSelect" onchange="onMicChange()"><option value="">Default microphone</option></select>
+              </label>
+              <label>VOICE
+                <select id="voiceSelect" onchange="onVoiceChange()"></select>
+              </label>
+              <label id="toneLabel">TONE
+                <select id="toneSelect" onchange="onToneChange()">
+                  <option value="warmind">Warmind (deep, steady)</option>
+                  <option value="deep">Deep</option>
+                  <option value="neutral">Neutral</option>
+                  <option value="bright">Bright</option>
+                  <option value="calm">Calm and slow</option>
+                  <option value="urgent">Urgent</option>
+                  <option value="custom">Custom</option>
+                </select>
+              </label>
+              <label id="pitchLabel">PITCH
+                <input type="range" id="pitchRange" min="0.5" max="1.5" step="0.05" value="1" oninput="onSliderChange()">
+                <span id="pitchVal"></span>
+              </label>
+              <label>SPEED
+                <input type="range" id="rateRange" min="0.7" max="1.4" step="0.05" value="1" oninput="onSliderChange()">
+                <span id="rateVal"></span>
+              </label>
+              <button onclick="testVoice()"
+                style="background:#1a0505; border:1px solid #7a0000; padding:6px 16px; border-radius:4px; font-family:'Share Tech Mono','Courier New',monospace; letter-spacing:2px; cursor:pointer;">
+                TEST VOICE
+              </button>
+            </div>
+            <div id="voiceStatus" style="margin-top: 14px; font-family:'Share Tech Mono','Courier New',monospace; letter-spacing:1px;">
+              [SERAPH//VOICE_LINK] STANDBY
+            </div>
+            <div style="margin-top: 8px; font-family:'Share Tech Mono','Courier New',monospace; font-size: 13px; min-height: 40px;">
+              <div id="voiceYou"></div>
+              <div id="voiceBot"></div>
+            </div>
+            <div id="voiceNote" style="font-size: 11px; opacity: 0.6; font-family:'Share Tech Mono','Courier New',monospace;">
+              VOICE SESSIONS ARE NOT SAVED // LINK AUTO-TERMINATES ON TAB SWITCH
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 3: CHESS (hidden by default) -->
+    <div id="chessView" style="display: none; width: 100%; text-align: center;">
+      <style>
+        #chessView .mono { font-family:'Share Tech Mono','Courier New',monospace; letter-spacing:1px; }
+        #chessLayout { display:flex; gap:28px; flex-wrap:wrap; justify-content:center; align-items:flex-start; }
+        #chessBoard { display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr); width:min(92vw,560px); aspect-ratio:1/1; border:2px solid #7a0000; border-radius:4px; user-select:none; }
+        #chessBoard .sq { position:relative; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+        #chessBoard .sq.light { background:#858585 !important; }
+        #chessBoard .sq.dark { background:#444444 !important; }
+        #chessBoard .sq.last { box-shadow: inset 0 0 0 100px rgba(179,18,18,0.35); }
+        #chessBoard .sq.check { box-shadow: inset 0 0 18px 8px #ff0000; }
+        #chessBoard .sq.sel { box-shadow: inset 0 0 0 4px #ff4d4d; }
+        #chessBoard .sq.hint::after { content:""; position:absolute; width:26%; height:26%; border-radius:50%; background:rgba(255,77,77,0.75); }
+        #chessBoard .sq.hint.cap::after { width:88%; height:88%; background:transparent; border:4px solid rgba(255,77,77,0.85); box-sizing:border-box; }
+        #chessBoard .pc { font-size:clamp(30px,7.2vw,54px); line-height:1; pointer-events:none; }
+        #chessBoard .pc.w { color:#f4f4f4 !important; text-shadow:0 1px 3px #000; }
+        #chessBoard .pc.b { color:#150000 !important; text-shadow:0 0 2px #ff4d4d, 0 0 5px #ff4d4d; }
+        #chessBoard .co { position:absolute; font-size:10px; font-style:normal; opacity:0.8; pointer-events:none; }
+        #chessBoard .co.rk { top:2px; left:3px; }
+        #chessBoard .co.fl { bottom:1px; right:3px; }
+        #chessBoard .sq.light .co { color:#1a1a1a !important; }
+        #chessBoard .sq.dark .co { color:#dddddd !important; }
+        #chessSide select { background:#1a0505 !important; color:#ff4d4d !important; border:1px solid #7a0000; border-radius:4px; padding:6px 8px; font-family:'Share Tech Mono','Courier New',monospace; }
+        #chessSide option { background:#1a0505 !important; color:#ff4d4d !important; }
+        #chessSide input[type=checkbox] { accent-color:#b31212; vertical-align:middle; }
+      </style>
+      <div class="card" style="background-color: #3a3a3a !important; border: 1px solid #555 !important;">
+        <div class="card-body text-center">
+          <h6 id="chessTitle" class="mb-3" style="color: #ff4d4d !important; letter-spacing: 2px;">RASPUTIN // CHESS PROTOCOL</h6>
+
+          <div id="chessLayout">
+            <div id="chessBoard"></div>
+
+            <div id="chessSide" class="mono" style="width: min(92vw, 340px); text-align: left; font-size: 13px;">
+              <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:12px;">
+                <label>PLAY AS
+                  <select id="chessColor" onchange="onChessColor()">
+                    <option value="white">White</option>
+                    <option value="black">Black</option>
+                  </select>
+                </label>
+                <label>STRENGTH
+                  <select id="chessLevel" onchange="onChessLevel()"></select>
+                </label>
+              </div>
+              <label style="display:block; margin-bottom:12px;">
+                <input type="checkbox" id="chessSpeak" onchange="onChessSpeak()"> SPEAK ALOUD
+              </label>
+              <button onclick="newChessGame()"
+                style="background:#1a0505; border:1px solid #b31212; padding:8px 20px; border-radius:4px; font-family:'Share Tech Mono','Courier New',monospace; letter-spacing:2px; cursor:pointer;">
+                NEW GAME
+              </button>
+
+              <div id="chessStatus" style="margin-top:18px; font-size:14px;">[CHESS] LOADING</div>
+              <div id="chessSay" style="margin-top:10px; min-height:60px; line-height:1.5;"></div>
+              <div id="chessMoves" style="margin-top:10px; max-height:110px; overflow-y:auto; font-size:12px; line-height:1.6; opacity:0.85;"></div>
+              <div id="chessEngine" style="margin-top:10px; font-size:11px; opacity:0.6;"></div>
+              <div style="margin-top:6px; font-size:11px; opacity:0.6;">GAMES ARE NOT SAVED // CLICK A PIECE, THEN A MARKED SQUARE</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- VIEW 5: HOME / SMART LIGHTS (hidden by default). Built by static/js/home.js -->
+    <div id="homeView" style="display: none; width: 100%;">
+      <div class="hm-shell">
+        <div class="hm-bar">
+          <b>RASPUTIN // HOME CONTROL</b>
+          <span id="hmStatus">&#9679; LOADING</span>
+          <span class="hm-sp"></span>
+          <button class="hm-btn" id="hmScan" title="Look for WiZ bulbs and a Hue Bridge on your Wi-Fi">SCAN NETWORK</button>
+          <button class="hm-btn" id="hmAllOn">ALL ON</button>
+          <button class="hm-btn" id="hmAllOff">ALL OFF</button>
+          <button class="hm-btn" id="hmAddRoom">+ ROOM</button>
+          <button class="hm-btn" id="hmSetupBtn">SETUP</button>
+        </div>
+        <div id="hmMsg" class="hm-msg" style="display: none;"></div>
+
+        <div id="hmSetup" class="hm-setup" style="display: none;">
+          <div class="hm-setup-col">
+            <div class="hm-h">PHILIPS HUE</div>
+            <div id="hmHueState" class="hm-note"></div>
+            <div class="hm-row">
+              <input id="hmHueIp" class="hm-in" placeholder="Bridge IP, e.g. 192.168.1.20" spellcheck="false">
+              <button class="hm-btn" id="hmHueBtn">CONNECT BRIDGE</button>
+              <button class="hm-btn" id="hmHueForget">FORGET</button>
+            </div>
+            <div class="hm-note">Hue bulbs talk to the Hue Bridge, so the bridge is what gets connected. SCAN NETWORK usually finds it; then press the round button on the bridge when asked.</div>
+          </div>
+          <div class="hm-setup-col">
+            <div class="hm-h">WIZ BULBS</div>
+            <div id="hmWizState" class="hm-note"></div>
+            <div class="hm-row">
+              <input id="hmWizIp" class="hm-in" placeholder="Bulb IP (optional), e.g. 192.168.1.50" spellcheck="false">
+              <button class="hm-btn" id="hmWizBtn">ADD BULB</button>
+            </div>
+            <div class="hm-note">SCAN NETWORK finds WiZ bulbs by itself. If none appear: WiZ app &rarr; Settings &rarr; Security &rarr; turn on <b>Allow local communication</b>.</div>
+          </div>
+          <div class="hm-foot">LOCAL ONLY // EVERYTHING STAYS ON YOUR WI-FI. NOTHING IS SENT TO THE INTERNET.</div>
+        </div>
+
+        <div id="hmRooms"></div>
+      </div>
+    </div>
+
+{% if show_admin %}
+    <!-- VIEW 6: ADMIN (PC only, admin accounts only). Built by static/js/admin.js -->
+    <div id="adminView" style="display: none; width: 100%;">
+      <div class="ad-shell">
+        <div class="ad-bar">
+          <b>RASPUTIN // ADMIN</b>
+          <span id="adStatus">&#9679; LOADING</span>
+          <span class="ad-sp"></span>
+          <button class="ad-btn" id="adRefresh" type="button">REFRESH</button>
+        </div>
+        <div id="adMsg" class="ad-msg" style="display: none;"></div>
+        <div class="ad-grid">
+          <section class="ad-card">
+            <div class="ad-h">CREATE ACCOUNT</div>
+            <label class="ad-field">USERNAME
+              <input id="adUser" class="ad-in" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="32" placeholder="3 to 32 letters or numbers">
+            </label>
+            <label class="ad-field">PASSWORD
+              <input id="adPass" class="ad-in" type="password" autocomplete="new-password" maxlength="128" placeholder="at least 6 characters">
+            </label>
+            <label class="ad-show"><input type="checkbox" id="adShow"> show password</label>
+            <label class="ad-field">ADMIN LEVEL
+              <select id="adLevel" class="ad-in"></select>
+            </label>
+            <button class="ad-btn primary" id="adCreate" type="button">CREATE ACCOUNT</button>
+            <div class="ad-note">Admins can open this tab on the PC. That is all the level does. Nobody can create or remove an account above their own level.</div>
+          </section>
+          <section class="ad-card">
+            <div class="ad-h">WEB ADDRESSES</div>
+            <div id="adAddr"></div>
+          </section>
+        </div>
+        <section class="ad-accounts">
+          <div class="ad-h">ACCOUNTS</div>
+          <div id="adList"></div>
+        </section>
+      </div>
+    </div>
+{% endif %}
+
+{% if show_games %}
+    <!-- VIEW 8: GAMES (staff only). Shell: static/js/games.js; each game registers a panel (mindcraft.js) -->
+    <div id="gamesView" style="display: none; width: 100%;">
+      <div class="gm-shell">
+        <div class="gm-tabs" id="gmTabs"></div>
+        <div id="gmPanel"></div>
+      </div>
+    </div>
+{% endif %}
+
+{% if show_discord %}
+    <!-- VIEW 7: DISCORD (Admins and Owner, PC and phone). Wired by static/js/discord.js -->
+    <div id="discordView" style="display: none; width: 100%;">
+      <div class="dc-shell">
+        <div class="dc-bar">
+          <b>RASPUTIN // DISCORD</b>
+          <span id="dcStatus">&#9679; LOADING</span>
+          <span class="dc-sp"></span>
+          <button class="dc-btn" id="dcRefresh" type="button">REFRESH</button>
+        </div>
+        <div id="dcMsg" class="dc-msg" style="display: none;"></div>
+        <div class="dc-grid">
+          <section class="dc-card"><div class="dc-h">BOT</div><div id="dcBot"></div></section>
+          <section class="dc-card"><div class="dc-h">TOKEN</div><div id="dcToken"></div></section>
+          <section class="dc-card"><div class="dc-h">WHERE IT REPLIES</div><div id="dcWhere"></div></section>
+        </div>
+        <section class="dc-term">
+          <div class="dc-term-bar">
+            <b>TERMINAL</b>
+            <span id="dcTermInfo">requests and replies</span>
+            <span class="dc-sp"></span>
+            <label><input type="checkbox" id="dcAuto" checked> Auto-scroll</label>
+            <button class="dc-btn" id="dcClear" type="button">CLEAR</button>
+          </div>
+          <div id="dcTermOut"></div>
+        </section>
+      </div>
+    </div>
+{% endif %}
+
+{% if show_security %}
+    <!-- VIEW 9: SECURITY (Admins and Owner, PC and phone). Wyze-style: Cameras / Events / People / Settings. Wired by static/js/security(CS).js -->
+    <div id="securityView" style="display: none; width: 100%;">
+      <div class="cs-app">
+        <header class="cs-top">
+          <div>
+            <h2 class="cs-title">Security</h2>
+            <div class="cs-sub" id="csSub">Checking your camera&hellip;</div>
+          </div>
+          <span class="cs-pill" id="csStatus"><i></i><span id="csStatusTxt">Loading</span></span>
+        </header>
+
+        <div id="csMsg" class="cs-toast" role="status" aria-live="polite" style="display: none;"></div>
+
+        <!-- ===== CAMERAS ===== -->
+        <section class="cs-page" id="csPage-cams">
+          <div class="cs-grid">
+            <article class="cs-cam">
+              <div class="cs-feed" id="csFeedBox">
+                <img id="csFeed" alt="Live camera picture">
+                <div class="cs-feed-off" id="csFeedOff">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.500-2.500h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.500"/></svg>
+                  <b id="csFeedTxt">Camera is off</b>
+                  <small id="csFeedHelp">Turn it on to see the live picture.</small>
+                  <button type="button" class="cs-btn primary big" id="csBigOn">Turn on camera</button>
+                </div>
+                <div class="cs-live-badge" id="csLiveBadge"><i></i>LIVE</div>
+                <div class="cs-who" id="csWhoChip"></div>
+                <div class="cs-feed-bar">
+                  <button type="button" class="cs-ico-btn" id="csSnap" title="Take a picture" aria-label="Take a picture"><svg viewBox="0 0 24 24"><path d="M4 8h3l1.500-2.500h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.500"/></svg></button>
+                  <button type="button" class="cs-ico-btn" id="csVerify" title="Check this is a real person" aria-label="Check this is a real person"><svg viewBox="0 0 24 24"><path d="M12 3l7.500 3v5.500c0 4.700-3.100 8-7.500 9.500-4.400-1.500-7.500-4.800-7.500-9.500V6z"/><path d="M9 12l2.200 2.200L15.500 10"/></svg></button>
+                  <span class="cs-sp"></span>
+                  <button type="button" class="cs-ico-btn" id="csFull" title="Full screen" aria-label="Full screen"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+                </div>
+              </div>
+              <div class="cs-cam-foot">
+                <div class="cs-cam-info">
+                  <b id="csCamName">My camera</b>
+                  <span id="csCamState">Off</span>
+                </div>
+                <label class="cs-sw" title="Camera on / off"><input type="checkbox" class="js-power" aria-label="Camera on or off"><span class="cs-slider"></span></label>
+              </div>
+            </article>
+
+            <button type="button" class="cs-add" id="csFind">
+              <span class="cs-add-plus">+</span>
+              <b>Find cameras</b>
+              <small>Look for other cameras plugged into this computer</small>
+            </button>
+          </div>
+          <div class="cs-chips" id="csCamChips" style="display: none;"></div>
+
+          <h3 class="cs-sec">Quick actions</h3>
+          <div class="cs-tiles">
+            <button type="button" class="cs-tile" data-go="people-add"><span class="cs-tile-ic"><svg viewBox="0 0 24 24"><circle cx="10" cy="8" r="3.500"/><path d="M3.500 20c.5-3.500 3.200-5.500 6.500-5.500s6 2 6.500 5.500"/><path d="M19 8v6M16 11h6"/></svg></span><b>Add a face</b><small>Teach it who people are</small></button>
+            <button type="button" class="cs-tile" data-go="events"><span class="cs-tile-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.500"/><path d="M12 7.500V12l3 2"/></svg></span><b>See events</b><small>Who was seen, and when</small></button>
+            <button type="button" class="cs-tile" data-go="settings"><span class="cs-tile-ic"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></span><b>Settings</b><small>Alerts, photos and history</small></button>
+          </div>
+
+          <h3 class="cs-sec">Latest events <button type="button" class="cs-link" data-go="events">See all</button></h3>
+          <div class="cs-list" id="csRecent"></div>
+        </section>
+
+        <!-- ===== EVENTS ===== -->
+        <section class="cs-page" id="csPage-events" hidden>
+          <div class="cs-bar-row">
+            <div class="cs-seg" id="csFilter" role="tablist">
+              <button type="button" class="on" data-f="all">All</button>
+              <button type="button" data-f="known">People I know</button>
+              <button type="button" data-f="unknown">Strangers</button>
+            </div>
+          </div>
+          <div class="cs-term">
+            <div class="cs-term-h"><b>Event log</b><span id="csEvCount"></span></div>
+            <div class="cs-term-body" id="csEvents"></div>
+          </div>
+        </section>
+
+        <!-- ===== PEOPLE ===== -->
+        <section class="cs-page" id="csPage-people" hidden>
+          <div class="cs-bar-row">
+            <input class="cs-in grow" id="csSearch" type="search" placeholder="Search people" autocomplete="off">
+            <button type="button" class="cs-btn primary" id="csAddOpen">+ Add a person</button>
+          </div>
+          <div class="cs-people" id="csProfiles"></div>
+          <div class="cs-strangers">
+            <div><b id="csUnkTxt">0 strangers saved</b><small>Photos of people the camera did not know.</small></div>
+            <button type="button" class="cs-btn danger" id="csUnkClear" disabled>Remove them</button>
+          </div>
+        </section>
+
+        <!-- ===== SETTINGS ===== -->
+        <section class="cs-page" id="csPage-settings" hidden>
+          <h3 class="cs-sec first">Camera</h3>
+          <div class="cs-group">
+            <div class="cs-row"><div class="cs-row-t"><b>Camera</b><small>Turn the camera on or off. It stays on until you switch it off or close Rasputin.</small></div>
+              <label class="cs-sw"><input type="checkbox" class="js-power" aria-label="Camera on or off"><span class="cs-slider"></span></label></div>
+            <div class="cs-row"><div class="cs-row-t"><b>Which camera</b><small>Pick the camera to watch with.</small></div>
+              <div class="cs-row-r"><select class="cs-in" id="csCamSel" aria-label="Camera"><option value="0">Camera 0</option></select>
+              <button type="button" class="cs-btn" id="csScan">Find cameras</button></div></div>
+          </div>
+
+          <h3 class="cs-sec">Smart features</h3>
+          <div class="cs-group">
+            <div class="cs-row"><div class="cs-row-t"><b>Save photos of strangers</b><small>When someone it does not know shows up, keep their picture so you can name them later.</small></div>
+              <label class="cs-sw"><input type="checkbox" id="csCaptureSw" aria-label="Save photos of strangers"><span class="cs-slider"></span></label></div>
+            <div class="cs-row"><div class="cs-row-t"><b>Keep a history</b><small>Write down who the camera sees on the Events page.</small></div>
+              <label class="cs-sw"><input type="checkbox" id="csLogsSw" aria-label="Keep a history"><span class="cs-slider"></span></label></div>
+          </div>
+
+          <h3 class="cs-sec">History</h3>
+          <div class="cs-group">
+            <div class="cs-row"><div class="cs-row-t"><b>Download history</b><small>Save the list of events to a file.</small></div>
+              <div class="cs-row-r"><select class="cs-in" id="csFmt" aria-label="File type">
+                <option value="excel">Excel sheet (.csv)</option>
+                <option value="text">Plain text (.txt)</option>
+                <option value="pipe">Pipe-separated (.txt)</option>
+                <option value="json">JSON (.json)</option></select>
+              <button type="button" class="cs-btn" id="csExport">Download</button></div></div>
+            <div class="cs-row"><div class="cs-row-t"><b>Clear history</b><small>Delete every event. Download first if you want a copy.</small></div>
+              <button type="button" class="cs-btn danger" id="csClear">Clear</button></div>
+          </div>
+
+          <details class="cs-details">
+            <summary>Device info</summary>
+            <div class="cs-metrics">
+              <div><span>Speed</span><b id="csFps">-</b></div>
+              <div><span>Faces in view</span><b id="csFaces">-</b></div>
+              <div><span>Who</span><b id="csWho">-</b></div>
+              <div><span>Real person check</span><b id="csLive">-</b></div>
+              <div><span>Camera</span><b id="csCam">-</b></div>
+              <div><span>People saved</span><b id="csCount">-</b></div>
+            </div>
+          </details>
+        </section>
+
+        <!-- bottom bar on phones, top tabs on the PC -->
+        <nav class="cs-tabs" id="csTabs" aria-label="Security sections">
+          <button type="button" class="on" data-page="cams"><svg viewBox="0 0 24 24"><path d="M4 8h3l1.500-2.500h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.500"/></svg><span>Cameras</span></button>
+          <button type="button" data-page="events"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.500"/><path d="M12 7.500V12l3 2"/></svg><span>Events</span><em id="csBadge" hidden>0</em></button>
+          <button type="button" data-page="people"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.500"/><path d="M2.500 20c.5-3.500 3-5.500 6.500-5.500s6 2 6.500 5.500"/><path d="M16 5a3.500 3.500 0 0 1 0 6.500M18 14.800c2 .7 3.200 2.400 3.500 5.200"/></svg><span>People</span></button>
+          <button type="button" data-page="settings"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span>Settings</span></button>
+        </nav>
+      </div>
+
+      <!-- Full photo pop-up (click any face) -->
+      <div class="cs-photo-bg" id="csPhoto" hidden>
+        <figure class="cs-photo" role="dialog" aria-modal="true" aria-label="Photo">
+          <button type="button" class="cs-ico-btn" id="csPhotoX" aria-label="Close">&times;</button>
+          <img id="csPhotoImg" alt="">
+          <figcaption><b id="csPhotoName"></b><span id="csPhotoWhen"></span><small id="csPhotoNote"></small></figcaption>
+        </figure>
+      </div>
+
+      <!-- Add a person (pop-up) -->
+      <div class="cs-sheet-bg" id="csSheet" hidden>
+        <div class="cs-sheet" role="dialog" aria-modal="true" aria-labelledby="csSheetT">
+          <div class="cs-sheet-h"><b id="csSheetT">Add a person</b><button type="button" class="cs-ico-btn flat" id="csSheetX" aria-label="Close">&times;</button></div>
+          <label class="cs-lbl" for="csName">Their name</label>
+          <input class="cs-in" id="csName" type="text" maxlength="40" placeholder="For example: Mom" autocomplete="off" style="width:100%">
+          <div class="cs-opts">
+            <button type="button" class="cs-opt" id="csSave"><svg viewBox="0 0 24 24"><path d="M4 8h3l1.500-2.500h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.500"/></svg><b>Use the camera</b><small id="csSaveHelp">They look at the camera</small></button>
+            <button type="button" class="cs-opt" id="csImport"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.800"/><path d="M21 16l-5-5-8 8"/></svg><b>Upload a photo</b><small>Pick a clear picture of their face</small></button>
+          </div>
+          <input type="file" id="csFile" accept=".jpg,.jpeg,.png,image/*" style="display:none">
+          <p class="cs-hint">Adding the same name again gives it more samples, so it recognises them from more angles.</p>
+        </div>
+      </div>
+    </div>
+{% endif %}
+
+    <!-- VIEW 4: TERMINAL (hidden by default) -->
+    <div id="terminalView" style="display: none; width: 100%;">
+      <div class="term-shell">
+        <div class="term-bar">
+          <b>RASPUTIN // TERMINAL</b>
+          <span id="termStatus">&#9679; CONNECTING</span>
+          <span class="sp"></span>
+          <label><input type="checkbox" id="termAuto" checked> Auto-scroll</label>
+          <button onclick="clearTerm()">Clear</button>
+        </div>
+        <div id="termOut"></div>
+      </div>
+    </div>
+
+
+
+    </div><!-- /zoomRoot -->
+
+  </div>
+</div>
+<!-- [ Main Content ] end -->
+
+<!-- Three.js import map: required by Three.js example modules such as RoomEnvironment -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+  }
+}
+</script>
+
+<!-- 3D Jarvis Module Script -->
+<script type="module">
+  import { initJarvis3D } from "{{ url_for('static', filename='js/jarvis3d.js') }}";
+
+  let jarvisApp = null;
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('heroCanvas');
+    if (canvas) {
+      jarvisApp = initJarvis3D({
+        heroCanvas: canvas,
+        onReactorPulse: () => {
+          console.log("Reactor pulsed!");
+        }
+      });
+      window.jarvisApp = jarvisApp; // lets the voice code drive the core
+    }
+  });
+
+  // Toggle 3D rendering loop active state when switching views
+  const oldSwitchView = window.switchView;
+  window.switchView = function(viewName) {
+    if (typeof oldSwitchView === 'function') {
+      oldSwitchView(viewName);
+    }
+    if (jarvisApp) {
+      jarvisApp.setSceneActive('hero', viewName === 'core');
+    }
+  };
+</script>
+
+<!-- Chat Script -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+  let currentChatId = null;
+
+  function switchView(viewName) {
+    // Leaving the AI Core tab always kills the mic and any speech
+    if (viewName !== 'core') stopVoice();
+    if (viewName !== 'chess' && typeof stopChessSpeech === 'function') stopChessSpeech();
+
+    const chatView = document.getElementById('chatInterfaceView');
+    const coreView = document.getElementById('aiCoreView');
+    const chessView = document.getElementById('chessView');
+
+    chessView.style.display = viewName === 'chess' ? 'block' : 'none';
+    if (viewName === 'chess') {
+      chatView.style.display = 'none';
+      coreView.style.display = 'none';
+      initChess();
+    } else if (viewName === 'core') {
+      chatView.style.display = 'none';
+      coreView.style.display = 'block';
+
+      // Forces canvas resize check to fix black screen issue on tab switch
+      requestAnimationFrame(() => {
+        window.dispatchEvent(new Event('resize'));
+        const canvas = document.getElementById('heroCanvas');
+        if (canvas) {
+          canvas.style.width = '100%';
+          canvas.style.height = '100%';
+        }
+      });
+
+    } else {
+      chatView.style.display = 'block';
+      coreView.style.display = 'none';
+    }
+
+    // Per-tab zoom and back/forward history (see the Navigation script below)
+    NAV.view = viewName;
+    applyTabZoom(viewName);
+    setTimeout(navCommit, 0);
+  }
+
+  // ===========================================================================
+  // SERAPH// VOICE LINK: talk to Rasputin from the AI Core tab.
+  // Never saved: no database calls, no chat list refresh, history lives in
+  // this array only and is wiped whenever the link is deactivated.
+  // ===========================================================================
+  const VOICE = { on: false, phase: "idle", history: [], abort: null, stream: null, ctx: null, source: null, processor: null, mute: null, noise: 0.005, cap: null };
+  let cachedVoice = null;
+
+  const VOICE_STATUS = {
+    idle: "STANDBY // VOICE_LINK_OFFLINE",
+    listening: "LISTENING // SPEAK_NOW",
+    thinking: "PROCESSING // SUBMIND_EXECUTE",
+    speaking: "TRANSMITTING // WARMIND_RESPONDING"
+  };
+
+  function setVoiceState(state) {
+    document.getElementById("voiceStatus").textContent = `[SERAPH//VOICE_LINK] ${VOICE_STATUS[state]}`;
+    window.jarvisApp?.setVoiceState(state);
+  }
+
+  function setVoiceNote(text) {
+    document.getElementById("voiceStatus").textContent = `[SERAPH//VOICE_LINK] ${text}`;
+  }
+
+  function showTranscript(who, text) {
+    const el = document.getElementById(who === "YOU" ? "voiceYou" : "voiceBot");
+    if (el) el.textContent = text ? `${who}: ${text}` : "";
+  }
+
+  function setVoiceButtons(on) {
+    const onBtn = document.getElementById("voiceOnBtn");
+    const offBtn = document.getElementById("voiceOffBtn");
+    onBtn.disabled = on;
+    onBtn.style.opacity = on ? "0.4" : "1";
+    offBtn.disabled = !on;
+    offBtn.style.opacity = on ? "1" : "0.4";
+  }
+
+  // Voice activity detection settings
+  const VAD = { START_FRAMES: 2, END_SILENCE_MS: 1200, MAX_MS: 20000, MIN_MS: 350, MIN_THRESHOLD: 0.012 };
+
+  function resetCapture() {
+    VOICE.cap = { pre: [], chunks: [], speaking: false, hot: 0, lastVoice: 0, startedAt: 0 };
+  }
+
+  async function startVoice() {
+    if (VOICE.on) return;
+    unlockAudio();   // must run now, inside the tap, before the microphone prompt
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      setVoiceNote("ERROR // MIC_API_UNAVAILABLE");
+      return;
+    }
+    VOICE.on = true;
+    VOICE.history = [];
+    VOICE.phase = "idle";
+    showTranscript("YOU", "");
+    showTranscript("RASPUTIN", "");
+    setVoiceButtons(true);
+    setVoiceNote("REQUESTING // MIC_ACCESS");
+
+    let stream;
+    const micAudio = (id) => {
+      const a = { echoCancellation: true, noiseSuppression: true };
+      if (id) a.deviceId = { exact: id };
+      return { audio: a };
+    };
+    try {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia(micAudio(VOICE_PREFS.micId));
+      } catch (err) {
+        // the saved microphone is unplugged or gone: fall back to the system default
+        if (VOICE_PREFS.micId && (err.name === "OverconstrainedError" || err.name === "NotFoundError")) {
+          VOICE_PREFS.micId = "";
+          saveVoicePrefs();
+          stream = await navigator.mediaDevices.getUserMedia(micAudio(""));
+        } else {
+          throw err;
+        }
+      }
+    } catch (err) {
+      stopVoice();
+      setVoiceNote("ERROR // MIC_ACCESS_DENIED");
+      return;
+    }
+    populateMics(); // device names are only available once access was granted
+    if (!VOICE.on) { stream.getTracks().forEach(t => t.stop()); return; } // turned off while prompting
+
+    const AC = window.AudioContext || window.webkitAudioContext;
+    const ctx = new AC();
+    if (ctx.state === "suspended") ctx.resume();
+    const source = ctx.createMediaStreamSource(stream);
+    const processor = ctx.createScriptProcessor(4096, 1, 1);
+    const mute = ctx.createGain();
+    mute.gain.value = 0; // keeps the processor running without echoing the mic
+    source.connect(processor);
+    processor.connect(mute);
+    mute.connect(ctx.destination);
+
+    VOICE.stream = stream;
+    VOICE.ctx = ctx;
+    VOICE.source = source;
+    VOICE.processor = processor;
+    VOICE.mute = mute;
+    VOICE.noise = 0.005;
+    processor.onaudioprocess = onMicFrame;
+    resumeListening(0);
+  }
+
+  function stopVoice() {
+    const wasOn = VOICE.on;
+    VOICE.on = false;
+    VOICE.phase = "idle";
+    if (VOICE.processor) {
+      VOICE.processor.onaudioprocess = null;
+      try { VOICE.processor.disconnect(); } catch (e) {}
+    }
+    if (VOICE.source) { try { VOICE.source.disconnect(); } catch (e) {} }
+    if (VOICE.stream) VOICE.stream.getTracks().forEach(t => t.stop());
+    if (VOICE.ctx) { try { VOICE.ctx.close(); } catch (e) {} }
+    VOICE.stream = VOICE.ctx = VOICE.source = VOICE.processor = VOICE.mute = null;
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    stopSpeaking();
+    if (VOICE.abort) { VOICE.abort.abort(); VOICE.abort = null; }
+    VOICE.history = [];
+    if (wasOn) {
+      setVoiceButtons(false);
+      setVoiceState("idle");
+    }
+  }
+
+  function resumeListening(delay) {
+    setTimeout(() => {
+      if (!VOICE.on) return;
+      resetCapture();
+      VOICE.phase = "listening";
+      setVoiceState("listening");
+    }, delay);
+  }
+
+  // Runs for every mic buffer: simple volume-based voice activity detection
+  function onMicFrame(e) {
+    if (!VOICE.on || VOICE.phase !== "listening") return;
+    const frame = new Float32Array(e.inputBuffer.getChannelData(0));
+    let sum = 0;
+    for (let i = 0; i < frame.length; i++) sum += frame[i] * frame[i];
+    const rms = Math.sqrt(sum / frame.length);
+    const now = performance.now();
+    const cap = VOICE.cap;
+
+    // adaptive background-noise floor
+    VOICE.noise = rms < VOICE.noise ? rms : VOICE.noise + (rms - VOICE.noise) * 0.002;
+    const threshold = Math.max(VAD.MIN_THRESHOLD, VOICE.noise * 2.5 + 0.006);
+    const loud = rms > threshold;
+
+    if (!cap.speaking) {
+      cap.pre.push(frame);
+      if (cap.pre.length > 4) cap.pre.shift(); // keep a little lead-in so first words aren't clipped
+      cap.hot = loud ? cap.hot + 1 : 0;
+      if (cap.hot >= VAD.START_FRAMES) {
+        cap.speaking = true;
+        cap.startedAt = now;
+        cap.lastVoice = now;
+        cap.chunks = cap.pre.slice();
+        cap.pre = [];
+        setVoiceNote("CAPTURING // VOICE_DETECTED");
+      }
+      return;
+    }
+
+    cap.chunks.push(frame);
+    if (loud) cap.lastVoice = now;
+    if (now - cap.lastVoice > VAD.END_SILENCE_MS || now - cap.startedAt > VAD.MAX_MS) {
+      finishUtterance();
+    }
+  }
+
+  async function finishUtterance() {
+    VOICE.phase = "thinking"; // stop capturing immediately
+    const cap = VOICE.cap;
+    resetCapture();
+
+    if (cap.lastVoice - cap.startedAt < VAD.MIN_MS) { // just a click or cough
+      resumeListening(0);
+      return;
+    }
+
+    setVoiceState("thinking");
+    try {
+      const text = await transcribe(toPCM16(cap.chunks, VOICE.ctx.sampleRate));
+      if (!VOICE.on) return;
+      if (!text) { resumeListening(0); return; }
+      respondTo(text);
+    } catch (err) {
+      if (err.name === "AbortError" || !VOICE.on) return;
+      if (err.message === "STT_NOT_INSTALLED") {
+        stopVoice();
+        setVoiceNote("ERROR // RUN: pip install faster-whisper, THEN RESTART THE SERVER");
+        return;
+      }
+      setVoiceNote("CRITICAL // TRANSCRIBE_FAULT, RETRYING");
+      resumeListening(1500);
+    }
+  }
+
+  // Float32 at the mic's native rate -> 16 kHz mono int16 (what Whisper wants)
+  function toPCM16(chunks, inRate) {
+    let total = 0;
+    chunks.forEach(c => { total += c.length; });
+    const all = new Float32Array(total);
+    let off = 0;
+    chunks.forEach(c => { all.set(c, off); off += c.length; });
+
+    const ratio = inRate / 16000;
+    const outLen = Math.floor(total / ratio);
+    const out = new Int16Array(outLen);
+    for (let i = 0; i < outLen; i++) {
+      const idx = i * ratio;
+      const i0 = Math.floor(idx);
+      const i1 = Math.min(i0 + 1, total - 1);
+      const f = idx - i0;
+      let s = all[i0] * (1 - f) + all[i1] * f;
+      s = Math.max(-1, Math.min(1, s));
+      out[i] = s < 0 ? s * 32768 : s * 32767;
+    }
+    return out;
+  }
+
+  async function transcribe(pcm) {
+    const controller = new AbortController();
+    VOICE.abort = controller;
+    const res = await fetch("/transcribe", {
+      method: "POST",
+      headers: { "Content-Type": "application/octet-stream" },
+      body: pcm.buffer,
+      signal: controller.signal
+    });
+    if (res.status === 501) throw new Error("STT_NOT_INSTALLED");
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    return (data.text || "").trim();
+  }
+
+  async function respondTo(text) {
+    setVoiceState("thinking");
+    showTranscript("YOU", text);
+    const controller = new AbortController();
+    VOICE.abort = controller;
+    try {
+      const res = await fetch("/ask-voice", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text, history: VOICE.history }),
+        signal: controller.signal
+      });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+      if (!VOICE.on) return;
+      VOICE.history.push({ role: "user", content: text }, { role: "assistant", content: data.response });
+      VOICE.history = VOICE.history.slice(-12);
+      showTranscript("RASPUTIN", data.response);
+      speak(data.response, () => resumeListening(350));
+    } catch (err) {
+      if (err.name === "AbortError" || !VOICE.on) return;
+      setVoiceNote("CRITICAL // LINK_FAULT, RETRYING");
+      resumeListening(1500);
+    }
+  }
+
+  // ---- Voice selection + tone (remembered in this browser only) -------------
+  const TONES = {
+    warmind: { pitch: 0.8, rate: 0.95 },
+    deep:    { pitch: 0.55, rate: 0.9 },
+    neutral: { pitch: 1.0, rate: 1.0 },
+    bright:  { pitch: 1.25, rate: 1.05 },
+    calm:    { pitch: 0.95, rate: 0.85 },
+    urgent:  { pitch: 0.9, rate: 1.2 }
+  };
+  const VOICE_PREFS = { voiceURI: "", tone: "neutral", pitch: 1.0, rate: 1.0, micId: "" };
+  try {
+    Object.assign(VOICE_PREFS, JSON.parse(localStorage.getItem("rasputinVoicePrefs") || "{}"));
+  } catch (e) {}
+
+  // ---- Piper (local neural TTS). Falls back to browser voices if unavailable ----
+  const PIPER = { on: false, voices: [], audio: null, ctx: null, raf: 0, controller: null, el: null, graph: null };
+
+  // Phones only let a page play sound after a tap, and (iPhone) only on an <audio> element that a tap already
+  // started. So one shared element is "unlocked" by the tap that turns the voice link on, then reused for every reply.
+  const SILENT_WAV = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=";
+  function unlockAudio() {
+    try {
+      if (!PIPER.el) {
+        PIPER.el = new Audio();
+        PIPER.el.preload = "auto";
+        PIPER.el.setAttribute("playsinline", "");
+      }
+      PIPER.el.src = SILENT_WAV;
+      const p = PIPER.el.play();
+      if (p && p.catch) p.catch(() => {});
+      if (PIPER.ctx && PIPER.ctx.state === "suspended") PIPER.ctx.resume();
+    } catch (e) {}
+  }
+  document.addEventListener("pointerdown", () => { if (!PIPER.audio) unlockAudio(); }, { once: true, capture: true });
+
+  async function initPiper() {
+    try {
+      const res = await fetch("/piper-voices");
+      const data = await res.json();
+      if (!data.voices || !data.voices.length) return;
+      PIPER.on = true;
+      PIPER.voices = data.voices;
+
+      const sel = document.getElementById("voiceSelect");
+      sel.innerHTML = "";
+      data.voices.forEach(name => {
+        const o = document.createElement("option");
+        o.value = name;
+        o.textContent = name;
+        sel.appendChild(o);
+      });
+      if (!data.voices.includes(VOICE_PREFS.piperVoice)) {
+        VOICE_PREFS.piperVoice = data.default;
+      }
+      sel.value = VOICE_PREFS.piperVoice;
+    } catch (e) {}
+  }
+
+  function stopSpeaking() {
+    PIPER.controller?.abort();
+    PIPER.controller = null;
+    cancelAnimationFrame(PIPER.raf);
+    if (PIPER.audio) {
+      PIPER.audio.onended = PIPER.audio.onerror = null;
+      PIPER.audio.pause();
+      PIPER.audio = null;
+    }
+  }
+
+  async function fetchPiper(text, signal) {
+    const res = await fetch("/speak", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      // Pitch is applied at playback by speeding the audio up/down, which also changes
+      // the tempo, so Piper is asked for the opposite speed to land on the chosen SPEED.
+      body: JSON.stringify({ text, voice: VOICE_PREFS.piperVoice, speed: VOICE_PREFS.rate / VOICE_PREFS.pitch }),
+      signal
+    });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    return URL.createObjectURL(await res.blob());
+  }
+
+  // Drives the 3D core while the voice talks. On a computer it follows the real loudness (Web Audio). On a phone it
+  // plays the sound straight through the <audio> element instead: routing it through Web Audio is what makes it
+  // silent on iPhones (the ringer switch mutes it) and on any phone where the audio context never started.
+  function startMeter(audio) {
+    cancelAnimationFrame(PIPER.raf);
+    const phone = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+    let analyser = null;
+    if (!phone) {
+      try {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (!PIPER.ctx) PIPER.ctx = new AC();
+        if (PIPER.ctx.state === "suspended") PIPER.ctx.resume();
+        if (!PIPER.graph) {            // a media element can only be wired up once, so it is built once and reused
+          const src = PIPER.ctx.createMediaElementSource(audio);
+          const an = PIPER.ctx.createAnalyser();
+          an.fftSize = 512;
+          const bass = PIPER.ctx.createBiquadFilter();   // low-end boost for deeper tones
+          bass.type = "lowshelf";
+          bass.frequency.value = 220;
+          src.connect(bass);
+          bass.connect(an);
+          an.connect(PIPER.ctx.destination);
+          PIPER.graph = { an, bass };
+        }
+        PIPER.graph.bass.gain.value = Math.max(0, (1 - VOICE_PREFS.pitch) * 20);
+        analyser = PIPER.graph.an;
+      } catch (e) { analyser = null; }
+    }
+    if (analyser) {
+      const buf = new Uint8Array(analyser.fftSize);
+      const tick = () => {
+        analyser.getByteTimeDomainData(buf);
+        let peak = 0;
+        for (let i = 0; i < buf.length; i++) peak = Math.max(peak, Math.abs(buf[i] - 128));
+        window.jarvisApp?.speechBeat(0.6 + (peak / 128) * 1.2);
+        PIPER.raf = requestAnimationFrame(tick);
+      };
+      tick();
+    } else {
+      let last = 0;
+      const tick = (t) => {
+        if (t - last > 110) { last = t; window.jarvisApp?.speechBeat(0.8 + Math.random() * 0.7); }
+        PIPER.raf = requestAnimationFrame(tick);
+      };
+      PIPER.raf = requestAnimationFrame(tick);
+    }
+  }
+
+  // Plays one WAV, pulsing the 3D core to the loudness of the voice
+  function playUrl(url, token) {
+    return new Promise(resolve => {
+      if (token !== speakToken) { URL.revokeObjectURL(url); resolve(); return; }
+      if (!PIPER.el) { PIPER.el = new Audio(); PIPER.el.setAttribute("playsinline", ""); }
+      const audio = PIPER.el;
+      PIPER.audio = audio;
+      audio.onended = audio.onerror = null;
+      // lets playbackRate lower/raise the pitch instead of just changing tempo
+      audio.preservesPitch = false;
+      audio.mozPreservesPitch = false;
+      audio.webkitPreservesPitch = false;
+      audio.defaultPlaybackRate = VOICE_PREFS.pitch;
+      audio.src = url;
+      audio.playbackRate = VOICE_PREFS.pitch;
+      audio.volume = 1;
+      audio.muted = false;
+      startMeter(audio);
+
+      const done = () => {
+        cancelAnimationFrame(PIPER.raf);
+        URL.revokeObjectURL(url);
+        resolve();
+      };
+      audio.onended = done;
+      audio.onerror = done;
+      const p = audio.play();
+      if (p && p.catch) p.catch(() => {
+        setVoiceNote("WARNING // SOUND_BLOCKED, TAP THE SCREEN AND TRY AGAIN");
+        done();
+      });
+    });
+  }
+
+  // Voice options are hidden until the OPTIONS button is clicked
+  function toggleVoiceOptions() {
+    const panel = document.getElementById("voiceSettings");
+    const open = panel.style.display !== "none";
+    panel.style.display = open ? "none" : "flex";
+    document.getElementById("voiceOptionsBtn").textContent = open ? "OPTIONS" : "CLOSE OPTIONS";
+  }
+
+  // ---- Microphone choice (OPTIONS menu) ----
+  async function populateMics() {
+    const sel = document.getElementById("micSelect");
+    if (!sel || !navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
+    try {
+      const mics = (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === "audioinput");
+      sel.innerHTML = "";
+      const def = document.createElement("option");
+      def.value = "";
+      def.textContent = "Default microphone";
+      sel.appendChild(def);
+      mics.forEach((d, i) => {
+        if (d.deviceId === "default" || d.deviceId === "communications") return; // same as "Default microphone"
+        const o = document.createElement("option");
+        o.value = d.deviceId;
+        o.textContent = d.label || ("Microphone " + (i + 1));
+        sel.appendChild(o);
+      });
+      sel.value = [...sel.options].some(o => o.value === VOICE_PREFS.micId) ? VOICE_PREFS.micId : "";
+    } catch (e) {}
+  }
+
+  function onMicChange() {
+    VOICE_PREFS.micId = document.getElementById("micSelect").value;
+    saveVoicePrefs();
+    if (VOICE.on) {            // switch live: restart the link on the new microphone
+      stopVoice();
+      startVoice();
+    }
+  }
+
+  if (navigator.mediaDevices && navigator.mediaDevices.addEventListener) {
+    navigator.mediaDevices.addEventListener("devicechange", populateMics); // plug/unplug updates the list
+  }
+
+  function saveVoicePrefs() {
+    try { localStorage.setItem("rasputinVoicePrefs", JSON.stringify(VOICE_PREFS)); } catch (e) {}
+  }
+
+  function syncVoiceControls() {
+    document.getElementById("pitchRange").value = VOICE_PREFS.pitch;
+    document.getElementById("rateRange").value = VOICE_PREFS.rate;
+    document.getElementById("pitchVal").textContent = Number(VOICE_PREFS.pitch).toFixed(2);
+    document.getElementById("rateVal").textContent = Number(VOICE_PREFS.rate).toFixed(2);
+    document.getElementById("toneSelect").value = VOICE_PREFS.tone;
+  }
+
+  function defaultVoice(voices) {
+    return (
+      voices.find(v => /^en/i.test(v.lang) && /(daniel|david|mark|george|guy)/i.test(v.name)) ||
+      voices.find(v => /^en/i.test(v.lang)) ||
+      voices[0] || null
+    );
+  }
+
+  function pickVoice() {
+    if (cachedVoice) return cachedVoice;
+    const voices = window.speechSynthesis.getVoices();
+    cachedVoice = voices.find(v => v.voiceURI === VOICE_PREFS.voiceURI) || defaultVoice(voices);
+    return cachedVoice;
+  }
+
+  function populateVoices() {
+    const sel = document.getElementById("voiceSelect");
+    if (PIPER.on) return; // Piper voices own the dropdown
+    if (!sel || !window.speechSynthesis) return;
+    const voices = window.speechSynthesis.getVoices();
+    if (!voices.length) return;
+    cachedVoice = null;
+
+    sel.innerHTML = "";
+    const groupEn = document.createElement("optgroup");
+    groupEn.label = "English";
+    const groupOther = document.createElement("optgroup");
+    groupOther.label = "Other languages";
+
+    voices.forEach(v => {
+      const o = document.createElement("option");
+      o.value = v.voiceURI;
+      o.textContent = `${v.name} (${v.lang})${v.localService ? "" : " [online]"}`;
+      (/^en/i.test(v.lang) ? groupEn : groupOther).appendChild(o);
+    });
+    if (groupEn.children.length) sel.appendChild(groupEn);
+    if (groupOther.children.length) sel.appendChild(groupOther);
+
+    const chosen = voices.find(v => v.voiceURI === VOICE_PREFS.voiceURI) || defaultVoice(voices);
+    if (chosen) {
+      sel.value = chosen.voiceURI;
+      VOICE_PREFS.voiceURI = chosen.voiceURI;
+    }
+  }
+
+  function onVoiceChange() {
+    if (PIPER.on) {
+      VOICE_PREFS.piperVoice = document.getElementById("voiceSelect").value;
+    } else {
+      VOICE_PREFS.voiceURI = document.getElementById("voiceSelect").value;
+      cachedVoice = null;
+    }
+    saveVoicePrefs();
+    testVoice();
+  }
+
+  function onToneChange() {
+    const t = document.getElementById("toneSelect").value;
+    if (TONES[t]) {
+      VOICE_PREFS.tone = t;
+      VOICE_PREFS.pitch = TONES[t].pitch;
+      VOICE_PREFS.rate = TONES[t].rate;
+      syncVoiceControls();
+      saveVoicePrefs();
+      testVoice();
+    }
+  }
+
+  function onSliderChange() {
+    VOICE_PREFS.pitch = parseFloat(document.getElementById("pitchRange").value);
+    VOICE_PREFS.rate = parseFloat(document.getElementById("rateRange").value);
+    if (!PIPER.on) VOICE_PREFS.tone = "custom";
+    syncVoiceControls();
+    saveVoicePrefs();
+  }
+
+  // Preview only while the voice link is off (so the mic never hears the preview)
+  function testVoice() {
+    if (VOICE.on || !window.speechSynthesis) return;
+    speak("Warmind core online. Voice link established.", () => {
+      if (!VOICE.on) setVoiceState("idle");
+    });
+  }
+
+  if (window.speechSynthesis) window.speechSynthesis.onvoiceschanged = populateVoices;
+  syncVoiceControls();
+  populateVoices();
+  initPiper();
+  populateMics();
+
+  // ---- Speech text cleanup ---------------------------------------------------
+  function cleanForSpeech(t) {
+    return String(t)
+      .replace(/```[\s\S]*?```/g, " ")
+      .replace(/https?:\/\/\S+/g, " link ")
+      .replace(/&(?:#39|apos|#x27);/gi, "'")                    // HTML-encoded apostrophes
+      .replace(/[‘’ʼ´]/g, "'")              // curly/odd apostrophes -> straight
+      .replace(/[“”]/g, '"')
+      .replace(/(\w)\s*'\s*(s|t|re|ve|ll|d|m)\b/gi, "$1'$2")    // "what ' s" -> "what's"
+      .replace(/[*_#`>~|]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  let speakToken = 0;
+
+  // Piper path: synthesize sentence by sentence so speech starts after the first one
+  async function speakPiper(sentences, token, onDone) {
+    stopSpeaking();
+    const controller = new AbortController();
+    PIPER.controller = controller;
+    setVoiceState("speaking");
+
+    // kick off every request now; the server queues them, playback stays in order
+    const pending = sentences.map(s => fetchPiper(s.trim(), controller.signal));
+    pending.forEach(p => p.catch(() => {}));
+
+    try {
+      for (const p of pending) {
+        const url = await p;
+        if (token !== speakToken) return;
+        await playUrl(url, token);
+        if (token !== speakToken) return;
+      }
+      onDone();
+    } catch (err) {
+      if (err.name === "AbortError" || token !== speakToken) return;
+      PIPER.on = false; // Piper failed: fall back to browser voices for the rest of the session
+      setVoiceNote("WARNING // PIPER_FAULT, USING_SYSTEM_VOICE");
+      speakBrowser(sentences, token, onDone);
+    }
+  }
+
+  function speak(text, onDone) {
+    const clean = cleanForSpeech(text);
+    if (!clean) { onDone(); return; }
+    const sentences = clean.match(/[^.!?]+[.!?]*/g) || [clean];
+    const token = ++speakToken;
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+
+    if (PIPER.on) { speakPiper(sentences, token, onDone); return; }
+    if (!window.speechSynthesis) { onDone(); return; }
+    speakBrowser(sentences, token, onDone);
+  }
+
+  function speakBrowser(sentences, token, onDone) {
+    window.speechSynthesis.cancel();
+    setVoiceState("speaking");
+
+    sentences.forEach((s, i) => {
+      const u = new SpeechSynthesisUtterance(s.trim());
+      u.rate = VOICE_PREFS.rate;
+      u.pitch = VOICE_PREFS.pitch;
+      const v = pickVoice();
+      if (v) u.voice = v;
+      u.onstart = () => window.jarvisApp?.speechBeat(1.2);
+      u.onboundary = () => window.jarvisApp?.speechBeat(1); // core swells on each word
+      if (i === sentences.length - 1) {
+        const finish = () => { if (token === speakToken) onDone(); };
+        u.onend = finish;
+        u.onerror = finish;
+      }
+      window.speechSynthesis.speak(u);
+    });
+  }
+
+  window.addEventListener("pagehide", stopVoice);
+
+  async function sendMessage() {
+    const input = document.getElementById("userInput");
+    const message = input.value.trim();
+    if (!message) return;
+
+    appendMessage("You", message, "text-end text-white");
+    input.value = "";
+
+    const res = await fetch("/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message, chat_id: currentChatId })
+    });
+
+    const data = await res.json();
+    currentChatId = data.chat_id;
+    navSync();
+    appendMessage("Rasputin", data.response, "text-start text-white");
+
+    await refreshChatList();
+  }
+
+  function appendMessage(sender, text, cls) {
+    const chatbox = document.getElementById("chatbox");
+    const msg = document.createElement("div");
+    msg.className = cls;
+    msg.innerHTML = `<strong style="color: ${sender === "You" ? "#ffffff" : "#ff4d4d"};">${sender}:</strong> ${text}`;
+    chatbox.appendChild(msg);
+    chatbox.scrollTop = chatbox.scrollHeight;
+  }
+
+  const maxPoints = 30;
+  let cpuData = [], memData = [], gpuData = [];
+
+  const createChart = (elementId, label) => {
+    return new ApexCharts(document.querySelector(elementId), {
+      chart: {
+        type: "line",
+        height: 200,
+        animations: {
+          enabled: true,
+          easing: "linear",
+          dynamicAnimation: { speed: 500 }
+        },
+        toolbar: { show: false },
+        zoom: { enabled: false }
+      },
+      stroke: { curve: "smooth", width: 2 },
+      series: [{ name: label, data: [] }],
+      xaxis: { type: "datetime", labels: { show: false } },
+      yaxis: {
+        max: 100,
+        min: 0,
+        labels: { style: { colors: "#f1f1f1" } }
+      },
+      colors: ["#ff4d4d"],
+      grid: { borderColor: "#555", strokeDashArray: 4 }
+    });
+  };
+
+  const cpuChart = createChart("#cpuChart", "CPU");
+  const memChart = createChart("#memoryChart", "Memory");
+  const gpuChart = createChart("#gpuChart", "GPU");
+
+  cpuChart.render();
+  memChart.render();
+  gpuChart.render();
+
+  function updateCharts() {
+    if (document.hidden) return;   // no polling while the window is minimised
+    fetch('/system-data')
+      .then(res => res.json())
+      .then(data => {
+        const now = new Date().getTime();
+
+        cpuData.push({ x: now, y: data.cpu });
+        memData.push({ x: now, y: data.memory });
+        gpuData.push({ x: now, y: data.gpu || 0 });
+
+        if (cpuData.length > maxPoints) cpuData.shift();
+        if (memData.length > maxPoints) memData.shift();
+        if (gpuData.length > maxPoints) gpuData.shift();
+
+        cpuChart.updateSeries([{ data: cpuData }]);
+        memChart.updateSeries([{ data: memData }]);
+        gpuChart.updateSeries([{ data: gpuData }]);
+
+        const cpuPercent = document.getElementById("cpuPercent");
+        const memPercent = document.getElementById("memoryPercent");
+        const gpuPercent = document.getElementById("gpuPercent");
+
+        if (cpuPercent) cpuPercent.textContent = `${data.cpu}%`;
+        if (memPercent) memPercent.textContent = `${data.memory}%`;
+        if (gpuPercent) gpuPercent.textContent = `${data.gpu || 0}%`;
+      });
+  }
+
+  setInterval(updateCharts, 2000);
+  updateCharts();
+
+  function toggleChart(type) {
+    const chart = document.getElementById(`${type}Chart`);
+    if (chart) chart.style.display = chart.style.display === "none" ? "block" : "none";
+  }
+
+  async function refreshChatList() {
+    const res = await fetch("/chats");
+    const chats = await res.json();
+    const list = document.getElementById("chatList");
+    if (!list) return;
+
+    list.innerHTML = "";
+    chats.forEach(chat => {
+      const li = document.createElement("li");
+      li.className = "pc-item";
+      li.innerHTML = `
+        <div class="chat-entry" style="display: flex; align-items: center; justify-content: space-between; padding-right: 5px;"
+             onmouseover="this.querySelector('.chat-actions').style.display='inline-flex'"
+             onmouseout="this.querySelector('.chat-actions').style.display='none'">
+          <a href="#" class="pc-link" onclick="loadChat(${chat.id})" style="flex-grow: 1;">
+            <span class="pc-micon"><i class="ti ti-message-circle"></i></span>
+            <span class="pc-mtext">${chat.title}</span>
+          </a>
+          <div class="chat-actions" style="display: none; gap: 5px;">
+            <button onclick="renameChat(${chat.id})" style="background: none; border: none; color: red;">✏️</button>
+            <button onclick="deleteChat(${chat.id})" style="background: none; border: none; color: red;">🗑️</button>
+          </div>
+        </div>`;
+      list.appendChild(li);
+    });
+  }
+
+  async function loadChat(chatId) {
+    switchView('chat');
+    currentChatId = chatId; // set early so the history entry records this chat
+    const res = await fetch(`/chat/${chatId}`);
+    const messages = await res.json();
+    const chatbox = document.getElementById("chatbox");
+    chatbox.innerHTML = "";
+    messages.forEach(msg => {
+      appendMessage(
+        msg.role === "user" ? "You" : "Rasputin",
+        msg.content,
+        msg.role === "user" ? "text-end text-white" : "text-start text-white"
+      );
+    });
+    currentChatId = chatId;
+  }
+
+  async function renameChat(chatId) {
+    const newTitle = prompt("Rename chat:");
+    if (!newTitle) return;
+    await fetch(`/chat/${chatId}/rename`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title: newTitle })
+    });
+    refreshChatList();
+  }
+
+  async function deleteChat(chatId) {
+    if (!confirm("Delete this chat forever?")) return;
+    await fetch(`/chat/${chatId}/delete`, {
+      method: "DELETE"
+    });
+    if (chatId === currentChatId) {
+      document.getElementById("chatbox").innerHTML = "";
+      currentChatId = null;
+    }
+    refreshChatList();
+  }
+
+  function resetChat() {
+    currentChatId = null;
+    const chatbox = document.getElementById("chatbox");
+    chatbox.innerHTML = "";
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const input = document.getElementById("userInput");
+    if (input) {
+      input.addEventListener("keydown", function(event) {
+        if (event.key === "Enter" && !event.shiftKey) {
+          event.preventDefault();
+          sendMessage();
+        }
+      });
+    }
+  });
+
+  window.onload = () => {
+    refreshChatList();
+  }
+</script>
+
+<script src="{{ url_for('static', filename='js/rasputin-chat.js') }}"></script>
+
+<!-- Chess Script -->
+<script>
+  // ===========================================================================
+  // CHESS: play against Rasputin. Click a piece, then click a marked square.
+  // The server (python-chess + Stockfish) owns the rules; this page only draws
+  // the board. Nothing is saved: the move list lives in this page's memory.
+  // ===========================================================================
+  const START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+  const CHESS_GLYPH = { k: "♚", q: "♛", r: "♜", b: "♝", n: "♞", p: "♟" };
+  const CHESS_LEVELS = ["Novice", "Beginner", "Casual", "Improving", "Club", "Skilled", "Strong", "Expert", "Master", "Merciless"];
+  const CHESS = {
+    ready: false, moves: [], legal: {}, board: {}, color: "white", level: 4, speak: false,
+    selected: null, busy: false, over: false, last: null, checkSq: null, token: 0
+  };
+  const CHESS_SPEECH = { queue: [], speaking: false };
+
+  try {
+    const p = JSON.parse(localStorage.getItem("rasputinChessPrefs") || "{}");
+    if (p.color === "white" || p.color === "black") CHESS.color = p.color;
+    if (p.level >= 1 && p.level <= 10) CHESS.level = p.level;
+    if (typeof p.speak === "boolean") CHESS.speak = p.speak;
+  } catch (e) {}
+
+  function saveChessPrefs() {
+    try {
+      localStorage.setItem("rasputinChessPrefs", JSON.stringify({ color: CHESS.color, level: CHESS.level, speak: CHESS.speak }));
+    } catch (e) {}
+  }
+
+  function initChess() {
+    if (CHESS.ready) return;
+    CHESS.ready = true;
+
+    const lvl = document.getElementById("chessLevel");
+    CHESS_LEVELS.forEach((name, i) => {
+      const o = document.createElement("option");
+      o.value = i + 1;
+      o.textContent = `${i + 1} - ${name}`;
+      lvl.appendChild(o);
+    });
+    lvl.value = CHESS.level;
+    document.getElementById("chessColor").value = CHESS.color;
+    document.getElementById("chessSpeak").checked = CHESS.speak;
+
+    fetch("/chess/status")
+      .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(d => {
+        document.getElementById("chessEngine").textContent = d.engine === "stockfish"
+          ? "ENGINE: STOCKFISH"
+          : "ENGINE: BASIC // PUT STOCKFISH IN models/stockfish FOR FULL STRENGTH";
+      })
+      .catch(() => {
+        document.getElementById("chessEngine").textContent =
+          "CHESS UNAVAILABLE // RUN: pip install chess, THEN RESTART THE SERVER";
+      });
+
+    newChessGame();
+  }
+
+  function onChessColor() {
+    CHESS.color = document.getElementById("chessColor").value;
+    saveChessPrefs();
+    newChessGame();
+  }
+
+  function onChessLevel() {
+    CHESS.level = parseInt(document.getElementById("chessLevel").value, 10);
+    saveChessPrefs(); // applies from Rasputin's next move
+  }
+
+  function onChessSpeak() {
+    CHESS.speak = document.getElementById("chessSpeak").checked;
+    saveChessPrefs();
+    if (!CHESS.speak) stopChessSpeech();
+  }
+
+  // "rnbq.../8/..." -> { a8: "r", ... } (uppercase = white, lowercase = black)
+  function parseFen(fen) {
+    const map = {};
+    fen.split(" ")[0].split("/").forEach((row, i) => {
+      let f = 0;
+      for (const ch of row) {
+        if (/\d/.test(ch)) f += parseInt(ch, 10);
+        else { map["abcdefgh"[f] + (8 - i)] = ch; f++; }
+      }
+    });
+    return map;
+  }
+
+  function setChessStatus(text) {
+    document.getElementById("chessStatus").textContent = `[CHESS] ${text}`;
+  }
+
+  function showChessSay(text) {
+    document.getElementById("chessSay").textContent = text ? `RASPUTIN: ${text}` : "";
+  }
+
+  function renderMoveList(san) {
+    const out = [];
+    for (let i = 0; i < san.length; i += 2) {
+      out.push(`${i / 2 + 1}. ${san[i]}${san[i + 1] ? " " + san[i + 1] : ""}`);
+    }
+    const el = document.getElementById("chessMoves");
+    el.textContent = out.join("   ");
+    el.scrollTop = el.scrollHeight;
+  }
+
+  function renderChessBoard() {
+    const el = document.getElementById("chessBoard");
+    if (!el) return;
+    const flip = CHESS.color === "black";
+    const files = flip ? "hgfedcba" : "abcdefgh";
+    const ranks = flip ? [1, 2, 3, 4, 5, 6, 7, 8] : [8, 7, 6, 5, 4, 3, 2, 1];
+    const targets = CHESS.selected ? (CHESS.legal[CHESS.selected] || []) : [];
+
+    el.innerHTML = "";
+    ranks.forEach((r, ri) => {
+      [...files].forEach((f, fi) => {
+        const sq = f + r;
+        const light = ("abcdefgh".indexOf(f) + r) % 2 === 0;
+        let cls = "sq " + (light ? "light" : "dark");
+        if (CHESS.last && (CHESS.last.from === sq || CHESS.last.to === sq)) cls += " last";
+        if (CHESS.checkSq === sq) cls += " check";
+        if (CHESS.selected === sq) cls += " sel";
+        if (targets.includes(sq)) cls += CHESS.board[sq] ? " hint cap" : " hint";
+
+        const d = document.createElement("div");
+        d.className = cls;
+        d.onclick = () => onSquare(sq);
+
+        const p = CHESS.board[sq];
+        if (p) {
+          const s = document.createElement("span");
+          s.className = "pc " + (p === p.toUpperCase() ? "w" : "b");
+          s.textContent = CHESS_GLYPH[p.toLowerCase()] + "︎"; // text style, never the emoji version
+          d.appendChild(s);
+        }
+        if (fi === 0) {
+          const c = document.createElement("i");
+          c.className = "co rk";
+          c.textContent = r;
+          d.appendChild(c);
+        }
+        if (ri === 7) {
+          const c = document.createElement("i");
+          c.className = "co fl";
+          c.textContent = f;
+          d.appendChild(c);
+        }
+        el.appendChild(d);
+      });
+    });
+  }
+
+  function onSquare(sq) {
+    if (CHESS.busy || CHESS.over) return;
+    const piece = CHESS.board[sq];
+    const mine = piece && ((piece === piece.toUpperCase()) === (CHESS.color === "white"));
+
+    // second click: a marked square means "make this move"
+    if (CHESS.selected && (CHESS.legal[CHESS.selected] || []).includes(sq)) {
+      const from = CHESS.selected;
+      const mover = CHESS.board[from];
+      let uci = from + sq;
+      if (mover && mover.toLowerCase() === "p" && (sq[1] === "8" || sq[1] === "1")) uci += "q"; // auto-queen
+      chessRequest(uci);
+      return;
+    }
+
+    if (sq === CHESS.selected) CHESS.selected = null;
+    else if (mine && CHESS.legal[sq]) CHESS.selected = sq;
+    else CHESS.selected = null;
+    renderChessBoard();
+  }
+
+  function applyChessState(data) {
+    CHESS.moves = data.moves;
+    CHESS.board = parseFen(data.fen);
+    CHESS.legal = data.legal || {};
+    CHESS.last = data.last_move;
+    CHESS.checkSq = data.check_square;
+    CHESS.over = data.status !== "playing";
+    CHESS.busy = false;
+    CHESS.selected = null;
+    renderChessBoard();
+    renderMoveList(data.san || []);
+
+    if (CHESS.over) {
+      setChessStatus(data.result_text.toUpperCase());
+    } else {
+      const played = data.engine ? `RASPUTIN PLAYED ${data.engine.san} // ` : "";
+      setChessStatus(`${played}${data.check_square ? "CHECK // " : ""}YOUR MOVE`);
+    }
+  }
+
+  async function chessRequest(uci) {
+    const token = ++CHESS.token;
+    CHESS.busy = true;
+    CHESS.selected = null;
+    stopChessSpeech();
+
+    // show the human's move straight away; the server's reply replaces this
+    const snapshot = { board: { ...CHESS.board }, last: CHESS.last, checkSq: CHESS.checkSq };
+    if (uci) {
+      const from = uci.slice(0, 2), to = uci.slice(2, 4);
+      CHESS.board[to] = uci.length === 5
+        ? (CHESS.color === "white" ? uci[4].toUpperCase() : uci[4])
+        : CHESS.board[from];
+      delete CHESS.board[from];
+      CHESS.last = { from, to };
+      CHESS.checkSq = null;
+    }
+    setChessStatus(uci ? "RASPUTIN CONSIDERS..." : (CHESS.color === "black" ? "RASPUTIN OPENS..." : "SETTING THE BOARD..."));
+    renderChessBoard();
+
+    try {
+      const res = await fetch("/chess/move", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ moves: CHESS.moves, move: uci, color: CHESS.color, level: CHESS.level })
+      });
+      const data = await res.json();
+      if (token !== CHESS.token) return; // a new game started while waiting
+
+      if (!res.ok) {
+        Object.assign(CHESS, { board: snapshot.board, last: snapshot.last, checkSq: snapshot.checkSq, busy: false });
+        renderChessBoard();
+        setChessStatus("ERROR // " + (data.error || res.status));
+        return;
+      }
+
+      applyChessState(data);
+      if (data.engine) chessSay(data.engine.spoken);
+      fetchChessCommentary(data, token);
+    } catch (err) {
+      if (token !== CHESS.token) return;
+      Object.assign(CHESS, { board: snapshot.board, last: snapshot.last, checkSq: snapshot.checkSq, busy: false });
+      renderChessBoard();
+      setChessStatus("CRITICAL // LINK_FAULT, TRY AGAIN");
+    }
+  }
+
+  // Rasputin's spoken reaction arrives after the board has already updated
+  async function fetchChessCommentary(data, token) {
+    if (data.moves.length === 0) {
+      showChessSay("The board is set. Begin.");
+      chessSay("The board is set. Begin.");
+      return;
+    }
+    try {
+      const res = await fetch("/chess/comment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ moves: data.moves, eval_cp: data.eval_cp, color: CHESS.color })
+      });
+      if (!res.ok) return;
+      const out = await res.json();
+      if (token !== CHESS.token || !out.comment) return; // stale: a newer move is already on the board
+      showChessSay(out.comment);
+      chessSay(out.comment);
+    } catch (e) {}
+  }
+
+  function newChessGame() {
+    CHESS.token++;
+    stopChessSpeech();
+    CHESS.moves = [];
+    CHESS.legal = {};
+    CHESS.selected = null;
+    CHESS.over = false;
+    CHESS.last = null;
+    CHESS.checkSq = null;
+    CHESS.board = parseFen(START_FEN);
+    showChessSay("");
+    renderMoveList([]);
+    renderChessBoard();
+    chessRequest(null); // fetches the legal moves; if you play Black, Rasputin opens
+  }
+
+  // ---- Speech: queued so the move announcement finishes before the comment ----
+  function chessSay(text) {
+    if (!CHESS.speak || !text) return;
+    CHESS_SPEECH.queue.push(text);
+    if (!CHESS_SPEECH.speaking) nextChessSpeech();
+  }
+
+  function nextChessSpeech() {
+    const text = CHESS_SPEECH.queue.shift();
+    if (!text) {
+      CHESS_SPEECH.speaking = false;
+      setVoiceState("idle");
+      return;
+    }
+    CHESS_SPEECH.speaking = true;
+    speak(text, nextChessSpeech);
+  }
+
+  function stopChessSpeech() {
+    CHESS_SPEECH.queue = [];
+    CHESS_SPEECH.speaking = false;
+    speakToken++; // invalidates any speech still in flight
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    stopSpeaking();
+  }
+
+  window.addEventListener("pagehide", stopChessSpeech);
+</script>
+
+<!-- Navigation + per-tab zoom -->
+<script>
+  // ===========================================================================
+  // BROWSER-STYLE CONTROLS: back / forward / reload and zoom.
+  //  - Back and forward walk through the tabs (and chats) you opened, using the
+  //    page's own history, so Alt+Left, Alt+Right and the mouse side buttons work too.
+  //  - Zoom is remembered separately for each tab (Chat, AI Core, Chess).
+  // ===========================================================================
+  const NAV = { idx: 0, max: 0, view: "chat", cur: { view: "chat", chatId: null }, restoring: false };
+  const ZOOM_STEPS = [0.5, 0.67, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3];
+  const TAB_NAMES = { chat: "CHAT", core: "AI CORE", chess: "CHESS" };
+  const tabZoom = { chat: 1, core: 1, chess: 1 };
+
+  try {
+    const saved = JSON.parse(localStorage.getItem("rasputinTabZoom") || "{}");
+    Object.keys(tabZoom).forEach(k => {
+      const z = Number(saved[k]);
+      if (z >= 0.5 && z <= 3) tabZoom[k] = z;
+    });
+  } catch (e) {}
+
+  // ---- Zoom (one saved level per tab) ---------------------------------------
+  function applyTabZoom(view) {
+    const z = tabZoom[view] || 1;
+    const root = document.getElementById("zoomRoot");
+    if (root) root.style.zoom = z;
+    document.getElementById("zoomLabel").textContent = Math.round(z * 100) + "%";
+    document.getElementById("zoomTab").textContent = TAB_NAMES[view] || "";
+    // lets the 3D core re-measure its canvas after the size changes
+    requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
+  }
+
+  function setTabZoom(z) {
+    z = Math.max(ZOOM_STEPS[0], Math.min(ZOOM_STEPS[ZOOM_STEPS.length - 1], z));
+    tabZoom[NAV.view] = z;
+    try { localStorage.setItem("rasputinTabZoom", JSON.stringify(tabZoom)); } catch (e) {}
+    applyTabZoom(NAV.view);
+  }
+
+  function stepZoom(dir) {
+    const cur = tabZoom[NAV.view] || 1;
+    const next = dir > 0
+      ? ZOOM_STEPS.find(s => s > cur + 0.001)
+      : [...ZOOM_STEPS].reverse().find(s => s < cur - 0.001);
+    if (next) setTabZoom(next);
+  }
+
+  // ---- Back / forward history -----------------------------------------------
+  function updateNavButtons() {
+    document.getElementById("navBack").disabled = NAV.idx <= 0;
+    document.getElementById("navFwd").disabled = NAV.idx >= NAV.max;
+    try { sessionStorage.setItem("rasputinNavMax", String(NAV.max)); } catch (e) {}
+  }
+
+  // Called after every tab or chat change; adds a history entry if something really changed
+  function navCommit() {
+    if (NAV.restoring) return;
+    const chatId = NAV.view === "chat" ? currentChatId : null;
+    if (NAV.cur.view === NAV.view && NAV.cur.chatId === chatId) return;
+    NAV.idx++;
+    NAV.max = NAV.idx;
+    NAV.cur = { view: NAV.view, chatId };
+    history.pushState({ ...NAV.cur, idx: NAV.idx }, "");
+    updateNavButtons();
+  }
+
+  // The first message of a new chat gives it an id: update the entry, don't add one
+  function navSync() {
+    if (NAV.restoring || NAV.view !== "chat") return;
+    NAV.cur = { view: "chat", chatId: currentChatId };
+    history.replaceState({ ...NAV.cur, idx: NAV.idx }, "");
+  }
+
+  window.addEventListener("popstate", async (e) => {
+    const s = e.state;
+    if (!s || !TAB_NAMES[s.view]) return;
+    NAV.idx = Number.isInteger(s.idx) ? s.idx : NAV.idx;
+    NAV.restoring = true;
+    try {
+      if (s.view === "chat" && s.chatId) {
+        try { await loadChat(s.chatId); }
+        catch (err) { switchView("chat"); resetChat(); } // that chat no longer exists
+      } else if (s.view === "chat") {
+        switchView("chat");
+        resetChat();
+      } else {
+        switchView(s.view);
+      }
+    } finally {
+      NAV.restoring = false;
+      NAV.cur = { view: s.view, chatId: s.view === "chat" ? currentChatId : null };
+      updateNavButtons();
+    }
+  });
+
+  (function initNav() {
+    const s = history.state;
+    NAV.idx = s && Number.isInteger(s.idx) ? s.idx : 0;
+    let max = NAV.idx;
+    try { max = Math.max(max, parseInt(sessionStorage.getItem("rasputinNavMax") || "0", 10) || 0); } catch (e) {}
+    NAV.max = max;
+    history.replaceState({ ...NAV.cur, idx: NAV.idx }, "");
+    updateNavButtons();
+    applyTabZoom("chat");
+  })();
+
+  // ---- Keyboard and mouse wheel ---------------------------------------------
+  function isTyping(el) {
+    return el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.isContentEditable);
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.altKey && !e.ctrlKey && !e.metaKey && (e.key === "ArrowLeft" || e.key === "ArrowRight")) {
+      if (isTyping(e.target)) return;
+      e.preventDefault();
+      if (e.key === "ArrowLeft") history.back(); else history.forward();
+      return;
+    }
+    if (!(e.ctrlKey || e.metaKey) || e.altKey) return;
+    if (e.key === "+" || e.key === "=" || e.code === "NumpadAdd") { e.preventDefault(); stepZoom(1); }
+    else if (e.key === "-" || e.key === "_" || e.code === "NumpadSubtract") { e.preventDefault(); stepZoom(-1); }
+    else if (e.key === "0" || e.code === "Numpad0") { e.preventDefault(); setTabZoom(1); }
+  }, true);
+
+  let lastWheelZoom = 0;
+  window.addEventListener("wheel", (e) => {
+    if (!(e.ctrlKey || e.metaKey)) return;
+    e.preventDefault();
+    const now = performance.now();
+    if (now - lastWheelZoom < 90) return; // trackpad pinches fire many events
+    lastWheelZoom = now;
+    stepZoom(e.deltaY < 0 ? 1 : -1);
+  }, { passive: false });
+</script>
+
+<!-- Home tab (smart lights) -->
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
+{% if show_admin %}<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endif %}{% if show_discord %}<script src="{{ url_for('static', filename='js/discord.js') }}"></script>
+{% endif %}{% if show_games %}<script src="{{ url_for('static', filename='js/games.js') }}"></script>
+<script src="{{ url_for('static', filename='js/mindcraft.js') }}"></script>
+<script src="{{ url_for('static', filename='js/flybridge.js') }}"></script>
+{% endif %}{% if show_security %}<script src="{{ url_for('static', filename='js/security(CS).js') }}"></script>
+{% endif %}<script src="{{ url_for('static', filename='js/layout-nav.js') }}"></script>
+<script>
+  // Phone app shell: slide-out menu, top bar title, keyboard-aware height
+  (function () {
+    const TITLES = { chat: "Rasputin", core: "AI Core", home: "Home", chess: "Chess", terminal: "Terminal", discord: "Discord", games: "Games", security: "Security" };
+    const $ = id => document.getElementById(id);
+    let cur = "chat";
+
+    window.phoneDrawer = function (open) {
+      $("phoneDrawer").classList.toggle("open", open);
+      $("phoneScrim").classList.toggle("open", open);
+      $("phoneDrawer").setAttribute("aria-hidden", open ? "false" : "true");
+      if (open) phoneChats();
+    };
+    window.phoneGo = function (v) {
+      phoneDrawer(false);
+      switchView(v);
+    };
+    window.phoneNewChat = function () {
+      phoneDrawer(false);
+      switchView("chat");
+      resetChat();
+    };
+
+    async function phoneChats() {
+      const box = $("phoneChatList");
+      let chats = [];
+      try { chats = await (await fetch("/chats")).json(); } catch (e) { box.textContent = ""; return; }
+      box.textContent = "";
+      if (!chats.length) { const e = document.createElement("div"); e.className = "pd-empty"; e.textContent = "No chats yet"; box.appendChild(e); return; }
+      chats.forEach(c => {
+        const row = document.createElement("div");
+        row.className = "pc-chat-row" + (c.id === currentChatId && cur === "chat" ? " active" : "");
+        const open = document.createElement("button");
+        open.type = "button"; open.className = "pc-chat-open"; open.textContent = c.title || "Untitled";
+        open.onclick = () => { phoneDrawer(false); loadChat(c.id).then(() => { if (window.refreshChatList) refreshChatList(); }); };
+        const ren = document.createElement("button");
+        ren.type = "button"; ren.className = "pc-chat-act"; ren.title = "Rename"; ren.textContent = "\u270E";
+        ren.onclick = async () => { await renameChat(c.id); phoneChats(); };
+        const del = document.createElement("button");
+        del.type = "button"; del.className = "pc-chat-act"; del.title = "Delete"; del.textContent = "\uD83D\uDDD1";
+        del.onclick = async () => { await deleteChat(c.id); phoneChats(); };
+        row.append(open, ren, del);
+        box.appendChild(row);
+      });
+    }
+
+    const prevSwitch = window.switchView;
+    window.switchView = function (v) {
+      prevSwitch.apply(this, arguments);
+      cur = v;
+      $("phoneTitle").textContent = TITLES[v] || "Rasputin";
+      document.querySelectorAll("#phoneDrawer .pd-nav button").forEach(b => b.classList.toggle("active", b.dataset.view === v));
+    };
+    document.querySelectorAll("#phoneDrawer .pd-nav button").forEach(b => b.classList.toggle("active", b.dataset.view === "chat"));
+
+    // keep the chat sized to what is really visible when the iPhone keyboard opens
+    const vv = window.visualViewport;
+    function fit() {
+      if (!vv) return;
+      document.documentElement.style.setProperty("--vvh", vv.height + "px");
+      // iOS scrolls the page up to reveal the focused box, then slowly animates back. Instead of scrolling
+      // back (which is the slow slide), follow the visible area directly so the layout never appears to move.
+      document.documentElement.style.setProperty("--vvt", vv.offsetTop + "px");
+    }
+    if (vv) {
+      vv.addEventListener("resize", fit); vv.addEventListener("scroll", fit); fit();
+      // while the keyboard animates, keep tracking every frame
+      document.addEventListener("focusin", () => {
+        const end = Date.now() + 800;
+        (function tick() { fit(); if (Date.now() < end) requestAnimationFrame(tick); })();
+      });
+    }
+
+    // the 3D box changes size per screen: tell it to re-measure after each tab change and rotation
+    const prevSwitch2 = window.switchView;
+    window.switchView = function (v) {
+      prevSwitch2.apply(this, arguments);
+      requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
+      setTimeout(() => window.dispatchEvent(new Event("resize")), 250);
+    };
+    window.addEventListener("orientationchange", () => setTimeout(() => { fit(); window.dispatchEvent(new Event("resize")); }, 300));
+
+    // lock the page: a swipe only moves something if it started inside a scrollable area
+    document.addEventListener("touchmove", e => {
+      if (getComputedStyle($("phoneBar")).display === "none") return;           // PC window: untouched
+      if (/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return;
+      for (let n = e.target; n && n !== document.body; n = n.parentElement) {
+        const oy = getComputedStyle(n).overflowY;
+        if ((oy === "auto" || oy === "scroll") && n.scrollHeight > n.clientHeight + 1) return;
+      }
+      e.preventDefault();
+    }, { passive: false });
+
+    // swipe from the left edge to open the menu, swipe left on it to close
+    let sx = 0, sy = 0, tracking = false;
+    document.addEventListener("touchstart", e => {
+      const t = e.touches[0]; sx = t.clientX; sy = t.clientY;
+      tracking = sx < 22 || $("phoneDrawer").classList.contains("open");
+    }, { passive: true });
+    document.addEventListener("touchend", e => {
+      if (!tracking) return;
+      const t = e.changedTouches[0], dx = t.clientX - sx, dy = Math.abs(t.clientY - sy);
+      const open = $("phoneDrawer").classList.contains("open");
+      if (!open && dx > 70 && dy < 50 && getComputedStyle($("phoneBar")).display !== "none") phoneDrawer(true);
+      else if (open && dx < -60 && dy < 50) phoneDrawer(false);
+    }, { passive: true });
+  })();
+</script>
+
+<script>
+  // lets the phone install Rasputin as an app (only runs on https or localhost)
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {});
+</script>
+
+<footer class="pc-footer">
+  <div class="footer-wrapper container-fluid">
+    <div class="row">
+      <div class="col-sm my-1">
+        <p class="m-0">Rasputin &#9829; crafted by Haden Hunt</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- [Page Specific JS] start -->
+<script src="{{ url_for('static', filename='assets/js/plugins/apexcharts.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/pages/dashboard-default.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/plugins/popper.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/plugins/simplebar.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/plugins/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/fonts/custom-font.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/pcoded.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/plugins/feather.min.js') }}"></script>
+
+<!-- Layout Config -->
+<script>
+  layout_change('light');
+  change_box_container('false');
+  layout_rtl_change('false');
+  preset_change("preset-1");
+  font_change("Public-Sans");
+</script>
+
+</body>
+</html>

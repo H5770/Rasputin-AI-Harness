@@ -1,0 +1,213 @@
+/* Security tab, Wyze-style: Cameras / Events / People / Settings. Friendly sentence-case text, big rounded cards, simple switches.
+   The page's inline CSS forces red text on most tags, so every colour here carries !important and a long selector. */
+html body #securityView *{color:var(--text)!important;box-sizing:border-box}
+html body #securityView svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+html body #securityView .cs-app{display:flex;flex-direction:column;max-width:1100px;margin:0 auto;padding:4px 2px 20px;font-family:'Inter',system-ui,sans-serif}
+html body #securityView .cs-top{order:-3;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 4px 14px}
+html body #securityView .cs-title{margin:0;font-size:28px;font-weight:700;letter-spacing:-.3px}
+html body #securityView .cs-sub,html body #securityView .cs-muted{color:var(--muted)!important;font-size:14px;margin-top:2px}
+html body #securityView .cs-pill{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;background:var(--panel);border:1px solid var(--border);font-size:13px;font-weight:600;white-space:nowrap}
+html body #securityView .cs-pill i{width:9px;height:9px;border-radius:50%;background:#6b6b70}
+html body #securityView .cs-pill.good{border-color:rgba(52,211,153,.4)}html body #securityView .cs-pill.good i{background:#34d399;box-shadow:0 0 8px #34d399}
+html body #securityView .cs-pill.warn i{background:#fbbf24;animation:csPulse 1s infinite}
+html body #securityView .cs-pill.bad{border-color:var(--red)}html body #securityView .cs-pill.bad i{background:var(--red-hot)}
+@keyframes csPulse{50%{opacity:.3}}
+
+/* tabs */
+html body #securityView .cs-tabs{display:flex;gap:4px;order:-2;padding:4px;margin:0 0 16px;background:var(--panel);border:1px solid var(--border-soft);border-radius:14px;align-self:flex-start}
+html body #securityView .cs-tabs button{position:relative;display:flex;align-items:center;gap:8px;padding:9px 18px;border:0;border-radius:10px;background:none;cursor:pointer;font:inherit;font-size:14px;font-weight:600;color:var(--muted)!important;transition:.15s}
+html body #securityView .cs-tabs button *{color:inherit!important}
+html body #securityView .cs-tabs button svg{width:20px;height:20px}
+html body #securityView .cs-tabs button:hover{background:rgba(217,34,40,.1);color:var(--text)!important}
+html body #securityView .cs-tabs button.on{background:rgba(217,34,40,.2);color:#fff!important}
+html body #securityView .cs-tabs button.on svg{stroke:var(--red-hot)}
+html body #securityView .cs-tabs em{font-style:normal;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--red);color:#fff!important;font-size:11px;line-height:18px;text-align:center}
+html body #securityView .cs-tabs em[hidden]{display:none}
+
+/* toast */
+html body #securityView .cs-toast{position:sticky;top:6px;z-index:5;margin:0 0 12px;padding:12px 16px;border-radius:12px;font-size:14px;background:#0f2a1f;border:1px solid rgba(52,211,153,.4);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+html body #securityView .cs-toast.bad{background:#2a0f12;border-color:var(--red)}
+
+/* buttons / inputs */
+html body #securityView .cs-btn{background:var(--raised);border:1px solid var(--border);border-radius:10px;padding:9px 16px;cursor:pointer;font:inherit;font-size:14px;font-weight:600;transition:.15s}
+html body #securityView .cs-btn:hover:not(:disabled){border-color:var(--red);box-shadow:var(--ring)}
+html body #securityView .cs-btn:disabled{opacity:.4;cursor:default}
+html body #securityView .cs-btn.primary{background:var(--red);border-color:var(--red);color:#fff!important}
+html body #securityView .cs-btn.primary:hover:not(:disabled){background:#e63036}
+html body #securityView .cs-btn.big{padding:12px 26px;font-size:15px;border-radius:999px}
+html body #securityView .cs-btn.danger{color:var(--red-hot)!important}
+html body #securityView .cs-btn.danger:hover:not(:disabled){background:var(--red);color:#fff!important}
+html body #securityView .cs-link{background:none;border:0;padding:0;margin-left:auto;cursor:pointer;font:inherit;font-size:13px;font-weight:600;color:var(--red-hot)!important}
+html body #securityView .cs-in{display:block;background:#1a1012!important;border:1px solid var(--border);border-radius:10px;padding:10px 12px;font:inherit;font-size:14px;min-width:0}
+html body #securityView .cs-in:focus{outline:0;border-color:var(--red);box-shadow:var(--ring)}
+html body #securityView .cs-in.grow{flex:1 1 200px}
+html body #securityView select.cs-in option{background:#1a1012!important}
+html body #securityView .cs-ico-btn{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border:0;border-radius:50%;background:rgba(10,10,12,.62);cursor:pointer;backdrop-filter:blur(4px);transition:.15s;flex:none}
+html body #securityView .cs-ico-btn svg{width:20px;height:20px;stroke:#fff}
+html body #securityView .cs-ico-btn:hover:not(:disabled){background:var(--red)}
+html body #securityView .cs-ico-btn:disabled{opacity:.35;cursor:default}
+html body #securityView .cs-ico-btn.flat{background:none;font-size:26px;line-height:1}
+html body #securityView .cs-sp{flex:1}
+
+/* switch */
+html body #securityView .cs-sw{position:relative;display:inline-block;width:50px;height:30px;flex:none;cursor:pointer}
+html body #securityView .cs-sw input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer;z-index:1}
+html body #securityView .cs-slider{position:absolute;inset:0;border-radius:999px;background:#2b2b30;border:1px solid var(--border);transition:.2s}
+html body #securityView .cs-slider::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#9a9a9f;transition:.2s}
+html body #securityView .cs-sw input:checked+.cs-slider{background:#34d399;border-color:#34d399}
+html body #securityView .cs-sw input:checked+.cs-slider::after{transform:translateX(20px);background:#fff}
+html body #securityView .cs-sw input:disabled{cursor:default}html body #securityView .cs-sw input:disabled+.cs-slider{opacity:.5}
+html body #securityView .cs-sw input:focus-visible+.cs-slider{box-shadow:var(--ring)}
+
+/* cameras page */
+html body #securityView .cs-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(220px,1fr);gap:16px}
+html body #securityView .cs-cam{background:var(--panel);border:1px solid var(--border-soft);border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+html body #securityView .cs-feed{position:relative;background:#050506;aspect-ratio:16/9;overflow:hidden}
+html body #securityView .cs-feed:fullscreen{aspect-ratio:auto}
+html body #securityView .cs-feed img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:none}
+html body #securityView .cs-feed.live img{display:block}
+html body #securityView .cs-feed-off{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;padding:0 24px;background:radial-gradient(ellipse at center,#1b1012 0%,#09090a 75%)}
+html body #securityView .cs-feed.live .cs-feed-off{display:none}
+html body #securityView .cs-feed-off svg{width:52px;height:52px;stroke:#5a3236;margin-bottom:4px}
+html body #securityView .cs-feed-off b{font-size:18px}
+html body #securityView .cs-feed-off small{color:var(--muted)!important;font-size:14px;margin-bottom:8px;max-width:420px}
+html body #securityView .cs-feed-off .cs-btn{margin-top:2px}
+html body #securityView .cs-feed-off.bad small{color:var(--red-hot)!important}
+html body #securityView .cs-feed.starting .cs-btn,html body #securityView .cs-feed.err-lib .cs-btn{display:none}
+html body #securityView .cs-live-badge{position:absolute;top:12px;left:12px;display:none;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:rgba(10,10,12,.62);font-size:12px;font-weight:700;letter-spacing:1px;backdrop-filter:blur(4px)}
+html body #securityView .cs-live-badge i{width:8px;height:8px;border-radius:50%;background:#ff3b3b;animation:csPulse 1.4s infinite}
+html body #securityView .cs-feed.live .cs-live-badge{display:inline-flex}
+html body #securityView .cs-who{position:absolute;top:12px;right:12px;display:none;padding:5px 12px;border-radius:999px;background:rgba(10,10,12,.62);font-size:13px;font-weight:600;backdrop-filter:blur(4px)}
+html body #securityView .cs-who.show{display:block}html body #securityView .cs-who.known{background:rgba(16,120,80,.75)}html body #securityView .cs-who.stranger{background:rgba(160,100,10,.8)}
+html body #securityView .cs-feed-bar{position:absolute;left:0;right:0;bottom:0;display:none;align-items:center;gap:10px;padding:26px 12px 12px;background:linear-gradient(transparent,rgba(0,0,0,.7))}
+html body #securityView .cs-feed.live .cs-feed-bar{display:flex}
+html body #securityView .cs-cam-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px}
+html body #securityView .cs-cam-info{display:flex;flex-direction:column;min-width:0}
+html body #securityView .cs-cam-info b{font-size:16px}html body #securityView .cs-cam-info span{color:var(--muted)!important;font-size:13px}
+html body #securityView .cs-add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:20px;text-align:center;cursor:pointer;font:inherit;background:transparent;border:2px dashed var(--border);border-radius:18px;transition:.15s;min-height:150px}
+html body #securityView .cs-add:hover{border-color:var(--red);background:rgba(217,34,40,.07)}
+html body #securityView .cs-add-plus{width:46px;height:46px;border-radius:50%;background:rgba(217,34,40,.2);display:flex;align-items:center;justify-content:center;font-size:28px;line-height:1;color:var(--red-hot)!important}
+html body #securityView .cs-add b{font-size:15px}html body #securityView .cs-add small{color:var(--muted)!important;font-size:13px}
+html body #securityView .cs-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+html body #securityView .cs-chips button{padding:7px 14px;border-radius:999px;border:1px solid var(--border);background:var(--panel);cursor:pointer;font:inherit;font-size:13px;font-weight:600}
+html body #securityView .cs-chips button.on{background:rgba(217,34,40,.22);border-color:var(--red)}
+html body #securityView .cs-sec{display:flex;align-items:center;margin:26px 4px 12px;font-size:18px;font-weight:700}
+html body #securityView .cs-sec.first{margin-top:4px}
+html body #securityView .cs-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+html body #securityView .cs-tile{display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:16px;text-align:left;cursor:pointer;font:inherit;background:var(--panel);border:1px solid var(--border-soft);border-radius:16px;transition:.15s}
+html body #securityView .cs-tile:hover{border-color:var(--red-deep);transform:translateY(-1px)}
+html body #securityView .cs-tile b{font-size:15px}html body #securityView .cs-tile small{color:var(--muted)!important;font-size:13px}
+html body #securityView .cs-tile-ic{width:42px;height:42px;border-radius:12px;background:rgba(217,34,40,.18);display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+html body #securityView .cs-tile-ic svg{width:22px;height:22px;stroke:var(--red-hot)}
+
+/* events */
+html body #securityView .cs-bar-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 14px}
+html body #securityView .cs-seg{display:inline-flex;padding:4px;background:var(--panel);border:1px solid var(--border-soft);border-radius:12px;gap:2px;flex-wrap:wrap}
+html body #securityView .cs-seg button{padding:7px 14px;border:0;border-radius:9px;background:none;cursor:pointer;font:inherit;font-size:13px;font-weight:600;color:var(--muted)!important}
+html body #securityView .cs-seg button.on{background:rgba(217,34,40,.22);color:#fff!important}
+html body #securityView .cs-list{display:flex;flex-direction:column;gap:8px}
+html body #securityView .cs-day{margin:14px 4px 2px;font-size:13px;font-weight:700;letter-spacing:.5px;color:var(--muted)!important;text-transform:uppercase}
+html body #securityView .cs-ev{display:flex;align-items:center;gap:14px;padding:12px 14px;background:var(--panel);border:1px solid var(--border-soft);border-radius:14px}
+html body #securityView .cs-av{width:46px;height:46px;border-radius:12px;flex:none;overflow:hidden;display:flex;align-items:center;justify-content:center;background:rgba(52,211,153,.16);font-weight:700;font-size:18px}
+html body #securityView .cs-av img{width:100%;height:100%;object-fit:cover}
+html body #securityView .cs-av.stranger{background:rgba(251,191,36,.16)}html body #securityView .cs-av.stranger svg{stroke:#fbbf24;width:24px;height:24px}
+html body #securityView .cs-ev-t{flex:1;min-width:0;display:flex;flex-direction:column}
+html body #securityView .cs-ev-t b{font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html body #securityView .cs-ev-t span{color:var(--muted)!important;font-size:13px}
+html body #securityView .cs-tag{padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:rgba(52,211,153,.16);color:#6ee7b7!important;flex:none}
+html body #securityView .cs-tag.stranger{background:rgba(251,191,36,.16);color:#fbbf24!important}
+html body #securityView .cs-empty{padding:34px 16px;text-align:center;color:var(--muted)!important;font-size:14px;background:var(--panel);border:1px dashed var(--border);border-radius:14px}
+html body #securityView .cs-empty b{display:block;font-size:16px;margin-bottom:4px;color:var(--text)!important}
+
+/* people */
+html body #securityView .cs-people{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+html body #securityView .cs-person{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:18px 12px 14px;text-align:center;background:var(--panel);border:1px solid var(--border-soft);border-radius:16px}
+html body #securityView .cs-person img{width:84px;height:84px;border-radius:50%;object-fit:cover;background:#000;border:2px solid var(--border);margin-bottom:6px}
+html body #securityView .cs-person b{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px}
+html body #securityView .cs-person span{color:var(--muted)!important;font-size:12px}
+html body #securityView .cs-person .cs-x{position:absolute;top:8px;right:8px;width:30px;height:30px;border:0;border-radius:50%;background:none;cursor:pointer;font-size:18px;line-height:1;color:var(--muted)!important;transition:.15s}
+html body #securityView .cs-person .cs-x:hover{background:var(--red);color:#fff!important}
+html body #securityView .cs-strangers{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;padding:14px 16px;background:var(--panel);border:1px solid var(--border-soft);border-radius:14px}
+html body #securityView .cs-strangers small{display:block;color:var(--muted)!important;font-size:13px}
+
+/* settings */
+html body #securityView .cs-group{background:var(--panel);border:1px solid var(--border-soft);border-radius:16px;overflow:hidden}
+html body #securityView .cs-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 18px;border-top:1px solid var(--border-soft)}
+html body #securityView .cs-row:first-child{border-top:0}
+html body #securityView .cs-row-t{display:flex;flex-direction:column;gap:2px;min-width:0}
+html body #securityView .cs-row-t b{font-size:15px}html body #securityView .cs-row-t small{color:var(--muted)!important;font-size:13px;line-height:1.45}
+html body #securityView .cs-row-r{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;flex:none}
+html body #securityView .cs-details{margin-top:18px;background:var(--panel);border:1px solid var(--border-soft);border-radius:16px;padding:0 18px}
+html body #securityView .cs-details summary{cursor:pointer;padding:16px 0;font-weight:600;font-size:15px}
+html body #securityView .cs-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;padding:0 0 16px}
+html body #securityView .cs-metrics div{padding:10px 12px;border-radius:10px;background:#0c0c0e}
+html body #securityView .cs-metrics span{display:block;color:var(--muted)!important;font-size:12px}html body #securityView .cs-metrics b{font-size:15px}
+
+/* add-a-person pop-up */
+html body #securityView .cs-sheet-bg{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.65)}
+html body #securityView .cs-sheet-bg[hidden]{display:none}
+html body #securityView .cs-sheet{width:min(460px,100%);padding:20px;background:var(--panel);border:1px solid var(--border);border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+html body #securityView .cs-sheet-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}html body #securityView .cs-sheet-h b{font-size:20px}
+html body #securityView .cs-lbl{display:block;margin-bottom:6px;font-size:13px;font-weight:600;color:var(--muted)!important}
+html body #securityView .cs-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+html body #securityView .cs-opt{display:flex;flex-direction:column;align-items:center;gap:5px;padding:16px 10px;text-align:center;cursor:pointer;font:inherit;background:var(--raised);border:1px solid var(--border);border-radius:14px;transition:.15s}
+html body #securityView .cs-opt:hover:not(:disabled){border-color:var(--red);box-shadow:var(--ring)}
+html body #securityView .cs-opt:disabled{opacity:.45;cursor:default}
+html body #securityView .cs-opt svg{width:28px;height:28px;stroke:var(--red-hot)}
+html body #securityView .cs-opt small{color:var(--muted)!important;font-size:12px}
+html body #securityView .cs-hint{margin:14px 0 0;color:var(--muted)!important;font-size:12px;line-height:1.5}
+
+@media (max-width: 900px){
+  html body #securityView .cs-grid{grid-template-columns:minmax(0,1fr)}
+  html body #securityView .cs-add{min-height:0;flex-direction:row;gap:14px;text-align:left;padding:14px 16px}
+  html body #securityView .cs-add small{display:none}
+}
+@media (max-width: 640px){
+  html body #securityView .cs-tiles{grid-template-columns:minmax(0,1fr)}
+  html body #securityView .cs-tile{flex-direction:row;align-items:center;gap:12px}html body #securityView .cs-tile-ic{margin:0}
+  html body #securityView .cs-row{flex-wrap:wrap}html body #securityView .cs-row-r{justify-content:flex-start;width:100%}
+  html body #securityView .cs-title{font-size:24px}
+}
+
+/* event log: a terminal-style box with its own scrollbar, so the page never grows */
+html body #securityView .cs-term{display:flex;flex-direction:column;height:clamp(260px,calc(100vh - 420px),560px);background:#08080a;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+html body #securityView .cs-term-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;background:#140a0b;border-bottom:1px solid var(--border);font-size:13px}
+html body #securityView .cs-term-h b{color:var(--red-hot)!important;letter-spacing:1px}
+html body #securityView .cs-term-h span{color:var(--muted)!important}
+html body #securityView .cs-term-body{flex:1;min-height:0;overflow-y:auto;padding:4px 12px 12px;display:flex;flex-direction:column;gap:8px;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--red-deep) transparent}
+html body #securityView .cs-term-body .cs-day{position:sticky;top:0;z-index:1;margin:0 -12px;padding:12px 12px 6px;background:#08080a}
+html body #securityView .cs-term-body .cs-empty{margin:8px 0}
+
+/* faces you can click to see the full photo */
+html body #securityView .cs-zoomable{position:relative;cursor:zoom-in;overflow:hidden}
+html body #securityView .cs-zoomable::after{content:"";position:absolute;inset:0;border-radius:inherit;opacity:0;transition:opacity .15s;
+  background:rgba(0,0,0,.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='6.500'/%3E%3Cpath d='M16 16l4.500 4.500M11 8.500v5M8.500 11h5'/%3E%3C/svg%3E") center/48% no-repeat}
+html body #securityView .cs-zoomable:hover::after,html body #securityView .cs-zoomable:focus-visible::after{opacity:1}
+html body #securityView .cs-zoomable:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+html body #securityView .cs-pic{width:84px;height:84px;border-radius:50%;margin-bottom:6px;border:2px solid var(--border);background:#000;padding:0}
+html body #securityView .cs-pic img{width:100%;height:100%;object-fit:cover;margin:0;border:0;border-radius:0;display:block}
+
+html body #securityView .cs-photo-bg{position:fixed;inset:0;z-index:2100;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.82)}
+html body #securityView .cs-photo-bg[hidden]{display:none}
+html body #securityView .cs-photo{position:relative;margin:0;max-width:min(960px,100%);max-height:100%;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+html body #securityView .cs-photo>.cs-ico-btn{position:absolute;top:10px;right:10px;font-size:26px;line-height:1;z-index:1}
+html body #securityView .cs-photo img{display:block;max-width:100%;max-height:calc(100vh - 150px);object-fit:contain;background:#000;margin:0 auto;min-height:120px}
+html body #securityView .cs-photo figcaption{display:flex;flex-direction:column;gap:2px;padding:12px 18px 14px}
+html body #securityView .cs-photo figcaption b{font-size:17px}
+html body #securityView .cs-photo figcaption span{font-size:14px}
+html body #securityView .cs-photo figcaption small{color:var(--muted)!important;font-size:12px}
+html body #securityView .cs-photo figcaption small:empty{display:none}
+@media (pointer: coarse) and (max-width: 820px){
+  html body #securityView .cs-term{height:58vh}
+}
+/* phone: the page is a locked app screen, so this tab scrolls inside itself and the tabs become a bottom bar */
+@media (pointer: coarse) and (max-width: 820px){
+  html body #securityView {height:100%!important;box-sizing:border-box;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:8px 12px 0}
+  html body #securityView .cs-app{min-height:100%;padding-bottom:0}
+  html body #securityView .cs-tabs{order:99;position:sticky;bottom:0;align-self:stretch;justify-content:space-around;margin:16px -12px 0;padding:6px 6px calc(8px + env(safe-area-inset-bottom,0px));border-radius:0;border-width:1px 0 0;background:#0c0c0e;z-index:6}
+  html body #securityView .cs-tabs button{flex-direction:column;gap:3px;flex:1;padding:6px 4px;font-size:11px}
+  html body #securityView .cs-tabs em{position:absolute;top:2px;right:18%}
+  html body #securityView .cs-page{padding-bottom:12px}
+  html body #securityView .cs-in{font-size:16px}
+  html body #securityView .cs-ico-btn{width:44px;height:44px}
+}
